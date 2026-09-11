@@ -1,5 +1,7 @@
 FROM node:22-alpine AS frontend-build
 WORKDIR /app/frontend
+ARG SENTRY_DSN
+ENV VITE_SENTRY_DSN=$SENTRY_DSN
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
