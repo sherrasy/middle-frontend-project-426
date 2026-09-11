@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import * as Sentry from '@sentry/node';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
@@ -10,11 +11,17 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as schemas from './db/schema.js';
 import fs from 'node:fs';
+import type { FastifyError } from 'fastify';
+
+const SENTRY_DSN = process.env['SENTRY_DSN'];
+Sentry.init({ dsn: SENTRY_DSN });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { Pool } = pg;
 
 const app = Fastify({ logger: true });
+
+Sentry.setupFastifyErrorHandler(app);
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool, { schema: schemas });
@@ -38,5 +45,17 @@ if (fs.existsSync(publicDir)) {
   });
 }
 
+app.setErrorHandler((error: FastifyError, request, reply) => {
+  Sentry.captureException(error);
+  reply.code(error.statusCode || 500).send({ error: error.message });
+});
+
 const port = Number(process.env.PORT) || 3000;
-await app.listen({ port, host: '0.0.0.0' });
+await app.listen({ port, host: '0.0.0.0' }, (err, address) => {
+  if (err) {
+    console.error(err);
+    Sentry.captureException(err);
+    process.exit(1);
+  }
+  console.log(`Server listening at ${address}`);
+});

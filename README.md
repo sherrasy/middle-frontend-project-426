@@ -27,6 +27,8 @@ git clone https://github.com/sherrasy/middle-frontend-project-426.git
 cd middle-frontend-project-426
 ```
 
+Приложение доступно на [https://middle-frontend-project-426-5f6r.onrender.com/](https://middle-frontend-project-426-5f6r.onrender.com/)
+
 ## Использование
 
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
