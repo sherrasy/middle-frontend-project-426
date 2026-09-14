@@ -1,0 +1,50 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    timeout-minutes: 15 
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: appdb
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/appdb
+      PORT: 3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and start Docker Compose
+        run: docker compose up --build -d
+
+      - name: Wait for App to start
+        run: npx wait-on --timeout 60000 --interval 2000 --verbose http://localhost:3000/health
+        
+      - name: Install frontend dependencies
+        run: make frontend-install
+
+      - name: Install Playwright Browsers
+        run: cd frontend && npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: make test
+        env:
+          APP_URL: http://localhost:3000
+
+      - name: Show backend logs
+        if: failure()
+        run: docker compose logs backend 
+
+      - name: Show frontend test report
+        if: failure()
+        run: cat frontend/playwright-report/index.html || true
+
+      - name: Stop App
+        if: always()
+        run: docker compose down -v

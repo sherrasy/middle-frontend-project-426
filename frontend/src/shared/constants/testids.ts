@@ -1,1 +1,3 @@
-export const TEST_IDS = {} as const;
+export const TEST_IDS = {
+  smoke: 'main-heading',
+} as const;
