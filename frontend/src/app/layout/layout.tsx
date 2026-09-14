@@ -1,9 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import { ErrorButton } from './errorButton';
+import { Header } from './header';
 
 export const MainLayout = () => (
   <div className='min-h-screen bg-gray-50 text-gray-900'>
-    {/* <Header /> */}
+    <Header />
     <div className='absolute top-4 right-4'>
       <ErrorButton />
     </div>
