@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: Computer shop app
+  version: 0.0.0
+tags:
+  - name: Test
+paths:
+  /test-money:
+    get:
+      operationId: TestApi_getTestMoney
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoneyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Test
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Код ошибки
+          examples:
+            - 404
+        message:
+          type: string
+          description: Текст ошибки для пользователя
+          examples:
+            - Данные не найдены
+    Money:
+      type: integer
+      format: int32
+      minimum: 0
+      description: Денежная сумма в целых рублях без копеек
+      examples:
+        - 1500
+    MoneyResponse:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+          description: Сумма в рублях
+          examples:
+            - 1500
