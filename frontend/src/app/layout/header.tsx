@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { TEST_IDS } from '@/shared/constants/testids';
+import { ROUTES } from '@/shared/constants/routes';
 
 export const Header = () => (
   <header className='bg-white shadow-sm border-b border-gray-200'>
@@ -33,15 +34,15 @@ export const Header = () => (
         </Link>
 
         <Link
-          to={'#'}
+          to={ROUTES.SIGNUP}
           className='text-base font-medium text-gray-700 hover:text-gray-900 transition-colors'
         >
           Вход
         </Link>
 
         <Link
-          to={'#'}
-          className='bg-blue-500 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-600 transition-colors'
+          to={ROUTES.SIGNIN}
+          className='bg-blue-500 px-4 py-2 rounded-md text-base font-medium hover:bg-blue-600 transition-colors'
         >
           Регистрация
         </Link>

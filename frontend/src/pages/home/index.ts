@@ -1,3 +1,3 @@
 export * from './api';
 export * from './model';
-export { HomePage } from './ui/Home';
+export { HomePage } from './ui/home-page';
