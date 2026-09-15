@@ -36,3 +36,6 @@ generate-frontend-types:
 
 generate-backend-types:
 	cd contract && npm run generate:backend
+
+mock-contract-server:
+	cd contract && npm run mock:api
