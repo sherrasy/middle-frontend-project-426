@@ -6,7 +6,8 @@
   "scripts": {
     "compile": "tsp compile .",
     "generate:backend": "openapi-box tsp-output/schema/openapi.yaml -o ../backend/types/api-schema.ts && node -e \"const fs=require('fs'); const f='../backend/types/api-schema.ts'; const c=fs.readFileSync(f,'utf8'); if(!c.startsWith('// @ts-nocheck')) fs.writeFileSync(f,'// @ts-nocheck\\n'+c)\"",
-    "generate:frontend": "openapi-typescript tsp-output/schema/openapi.yaml -o ../frontend/src/shared/types/api-schema.ts"
+    "generate:frontend": "openapi-typescript tsp-output/schema/openapi.yaml -o ../frontend/src/shared/types/api-schema.ts",
+    "mock:api": "prism mock tsp-output/schema/openapi.yaml --dynamic false"
   },
   "dependencies": {
     "@typespec/compiler": "^1.16.0",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "@geut/openapi-box": "^5.0.8",
+    "@stoplight/prism-cli": "^5.14.2",
     "openapi-typescript": "^7.13.0"
   }
 }
