@@ -1,0 +1,22 @@
+{
+  "name": "computer_app",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "compile": "tsp compile .",
+    "generate:backend": "openapi-box tsp-output/schema/openapi.yaml -o ../backend/types/api-schema.ts && node -e \"const fs=require('fs'); const f='../backend/types/api-schema.ts'; const c=fs.readFileSync(f,'utf8'); if(!c.startsWith('// @ts-nocheck')) fs.writeFileSync(f,'// @ts-nocheck\\n'+c)\"",
+    "generate:frontend": "openapi-typescript tsp-output/schema/openapi.yaml -o ../frontend/src/shared/types/api-schema.ts"
+  },
+  "dependencies": {
+    "@typespec/compiler": "^1.16.0",
+    "@typespec/http": "^1.16.0",
+    "@typespec/openapi": "^1.16.0",
+    "@typespec/openapi3": "^1.16.0",
+    "@typespec/rest": "^0.86.0"
+  },
+  "devDependencies": {
+    "@geut/openapi-box": "^5.0.8",
+    "openapi-typescript": "^7.13.0"
+  }
+}

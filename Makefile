@@ -27,3 +27,12 @@ db-generate:
 
 db-migrate:
 	cd backend && npm run db:migrate
+
+compile-openapi:
+	cd contract && npm run compile
+
+generate-frontend-types:
+	cd contract && npm run generate:frontend
+
+generate-backend-types:
+	cd contract && npm run generate:backend
