@@ -34,7 +34,22 @@ export const Header = () => (
         </Link>
 
         <Link
+          to={'#'}
+          data-testid={TEST_IDS.nav.account}
+          className='text-base font-medium text-gray-700 hover:text-gray-900 transition-colors'
+        >
+          Кабинет
+        </Link>
+        <Link
+          to={ROUTES.SIGNIN}
+          data-testid={TEST_IDS.nav.signout}
+          className='bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-base font-medium hover:bg-gray-400 '
+        >
+          Выйти
+        </Link>
+        <Link
           to={ROUTES.SIGNUP}
+          data-testid={TEST_IDS.nav.signup}
           className='text-base font-medium text-gray-700 hover:text-gray-900 transition-colors'
         >
           Вход
@@ -42,7 +57,8 @@ export const Header = () => (
 
         <Link
           to={ROUTES.SIGNIN}
-          className='bg-blue-500 px-4 py-2 rounded-md text-base font-medium hover:bg-blue-600 transition-colors'
+          data-testid={TEST_IDS.nav.signin}
+          className='bg-blue-500 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-600 '
         >
           Регистрация
         </Link>

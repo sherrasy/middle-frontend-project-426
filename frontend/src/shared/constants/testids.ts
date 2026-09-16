@@ -7,7 +7,9 @@ export const TEST_IDS = {
   },
   auth: {
     email: 'auth-email',
+    password: 'auth-password',
     submit: 'auth-submit',
+    error: 'auth-error',
   },
   smoke: 'main-heading',
 } as const;

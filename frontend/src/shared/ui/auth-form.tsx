@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
+import { TEST_IDS } from '../constants/testids';
 
 type AuthMode = 'login' | 'registration';
 
@@ -67,6 +68,7 @@ export const AuthForm = ({ mode, onSubmit }: AuthFormProps) => {
             onChange={(e) => setEmail(e.target.value)}
             className='w-full h-10 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none'
             placeholder='Введите email'
+            data-testid={TEST_IDS.auth.email}
           />
         </div>
 
@@ -85,6 +87,7 @@ export const AuthForm = ({ mode, onSubmit }: AuthFormProps) => {
               onChange={(e) => setPassword(e.target.value)}
               className='w-full h-10 border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none'
               placeholder='Введите пароль'
+              data-testid={TEST_IDS.auth.password}
             />
             <button
               type='button'
@@ -103,6 +106,7 @@ export const AuthForm = ({ mode, onSubmit }: AuthFormProps) => {
       <button
         type='submit'
         className='w-full h-10 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors'
+        data-testid={TEST_IDS.auth.error}
       >
         {config.submitButtonText}
       </button>
