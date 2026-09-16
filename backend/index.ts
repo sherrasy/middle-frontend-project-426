@@ -6,12 +6,22 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 import { registerRoutes } from './routes/index.js';
-import seed from './db/seed.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as schemas from './db/schema.js';
 import fs from 'node:fs';
 import type { FastifyError } from 'fastify';
+import * as schemas from './db/schema/index.js';
+import runSeeds from './db/seed/index.js';
+
+export type DrizzleDB = ReturnType<typeof drizzle<typeof schemas>>;
+
+// Users
+export type User = typeof schemas.users.$inferSelect;
+export type UserInsert = typeof schemas.users.$inferInsert;
+
+// Products
+export type Product = typeof schemas.products.$inferSelect;
+export type ProductInsert = typeof schemas.products.$inferInsert;
 
 const SENTRY_DSN = process.env['SENTRY_DSN'];
 Sentry.init({ dsn: SENTRY_DSN });
@@ -27,7 +37,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool, { schema: schemas });
 
 await migrate(db, { migrationsFolder: path.join(__dirname, 'drizzle') });
-await seed(db);
+await runSeeds(db);
 
 await registerRoutes(app);
 

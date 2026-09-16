@@ -91,15 +91,133 @@ const Binary = () => {
   })
 }
 
-const schema = {}
+const ComponentsSchemasUser = T.Object({
+  id: T.Integer({ format: 'int32' }),
+  email: T.String(),
+  name: T.Optional(T.String())
+})
+const ComponentsSchemasAuthResponse = T.Object({
+  token: T.String(),
+  user: CloneType(ComponentsSchemasUser)
+})
+const ComponentsSchemasValidationDetail = T.Object({
+  field: T.String(),
+  message: T.String()
+})
+const ComponentsSchemasError = T.Object({
+  code: T.Integer({ format: 'int32' }),
+  message: T.String()
+})
+const ComponentsSchemasValidationError = T.Intersect([
+  CloneType(ComponentsSchemasError),
+  T.Object({
+    details: T.Optional(T.Array(CloneType(ComponentsSchemasValidationDetail)))
+  })
+])
+const ComponentsSchemasLoginRequest = T.Object({
+  email: T.String({ format: 'email' }),
+  password: T.String()
+})
+const ComponentsSchemasRegisterRequest = T.Object({
+  email: T.String({ format: 'email' }),
+  password: T.String({ minLength: 8 })
+})
+
+const schema = {
+  '/auth/login': {
+    POST: {
+      args: T.Object({
+        body: CloneType(ComponentsSchemasLoginRequest, {
+          'x-content-type': 'application/json'
+        })
+      }),
+      data: CloneType(ComponentsSchemasAuthResponse, {
+        'x-status-code': '200',
+        'x-content-type': 'application/json'
+      }),
+      error: T.Union([
+        T.Union(
+          [
+            CloneType(ComponentsSchemasValidationError),
+            CloneType(ComponentsSchemasError)
+          ],
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
+  },
+  '/auth/logout': {
+    POST: {
+      args: T.Void(),
+      data: T.Any({ 'x-status-code': '204' }),
+      error: T.Union([
+        CloneType(ComponentsSchemasError, {
+          'x-status-code': 'default',
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
+  },
+  '/auth/me': {
+    GET: {
+      args: T.Void(),
+      data: T.Object(
+        {
+          id: T.Integer({ format: 'int32' }),
+          email: T.String(),
+          name: T.Optional(T.String())
+        },
+        {
+          'x-status-code': '200',
+          'x-content-type': 'application/json'
+        }
+      ),
+      error: T.Union([
+        CloneType(ComponentsSchemasError, {
+          'x-status-code': 'default',
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
+  },
+  '/auth/register': {
+    POST: {
+      args: T.Object({
+        body: CloneType(ComponentsSchemasRegisterRequest, {
+          'x-content-type': 'application/json'
+        })
+      }),
+      data: CloneType(ComponentsSchemasAuthResponse, {
+        'x-status-code': '200',
+        'x-content-type': 'application/json'
+      }),
+      error: T.Union([
+        T.Union(
+          [
+            CloneType(ComponentsSchemasValidationError),
+            CloneType(ComponentsSchemasError)
+          ],
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
+  }
+}
 
 const _components = {
   schemas: {
-    Error: T.Object({
-      code: T.Integer({ format: 'int32' }),
-      message: T.String()
+    AuthResponse: CloneType(ComponentsSchemasAuthResponse),
+    Error: CloneType(ComponentsSchemasError),
+    LoginRequest: CloneType(ComponentsSchemasLoginRequest),
+    Money: T.Integer({ format: 'int32', minimum: 0 }),
+    RegisterRequest: CloneType(ComponentsSchemasRegisterRequest),
+    User: T.Object({
+      id: T.Integer({ format: 'int32' }),
+      email: T.String(),
+      name: T.Optional(T.String())
     }),
-    Money: T.Integer({ format: 'int32', minimum: 0 })
+    ValidationDetail: CloneType(ComponentsSchemasValidationDetail),
+    ValidationError: CloneType(ComponentsSchemasValidationError)
   }
 }
 
