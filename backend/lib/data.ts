@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { ProductInsert } from '../types/index.js';
-import { UserInsert } from '../index.js';
+import type { ProductInsert, UserInsert } from '../types/index.js';
 
 export function buildProduct(
   params: Partial<ProductInsert> = {},

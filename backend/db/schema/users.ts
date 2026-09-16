@@ -8,6 +8,7 @@ export const users = pgTable(
     email: text('email').notNull(),
     passwordHash: text('password_hash').notNull(),
     name: text('name'),
+    sessionVersion: integer('session_version').notNull().default(1),
     ...timestamps,
   },
   (table) => [uniqueIndex('users_email_idx').on(table.email)],
