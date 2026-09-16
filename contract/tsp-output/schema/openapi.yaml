@@ -3,11 +3,12 @@ info:
   title: Computer shop app
   version: 0.0.0
 tags:
-  - name: Test
+  - name: Auth
 paths:
-  /test-money:
-    get:
-      operationId: TestApi_getTestMoney
+  /auth/login:
+    post:
+      operationId: AuthApi_login
+      description: Вход по email и паролю
       parameters: []
       responses:
         '200':
@@ -15,7 +16,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MoneyResponse'
+                $ref: '#/components/schemas/AuthResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error'
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+  /auth/logout:
+    post:
+      operationId: AuthApi_logout
+      description: Выход из системы
+      parameters: []
+      responses:
+        '204':
+          description: Ответ для успешного выхода
         default:
           description: An unexpected error response.
           content:
@@ -23,9 +48,72 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       tags:
-        - Test
+        - Auth
+  /auth/me:
+    get:
+      operationId: AuthApi_getCurrentUser
+      description: Получить текущего авторизованного пользователя
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Auth
+  /auth/register:
+    post:
+      operationId: AuthApi_register
+      description: Регистрация нового пользователя
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error'
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
 components:
   schemas:
+    AuthResponse:
+      type: object
+      required:
+        - token
+        - user
+      properties:
+        token:
+          type: string
+          description: Токен авторизации
+          examples:
+            - eyJhbGciOiJIUzI1NiIs...
+        user:
+          $ref: '#/components/schemas/User'
+          description: Данные пользователя
+      description: Ответ после успешной регистрации или входа
     Error:
       type: object
       required:
@@ -35,7 +123,7 @@ components:
         code:
           type: integer
           format: int32
-          description: Код ошибки
+          description: HTTP-код ошибки
           examples:
             - 404
         message:
@@ -43,6 +131,24 @@ components:
           description: Текст ошибки для пользователя
           examples:
             - Данные не найдены
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email пользователя
+          examples:
+            - demo+1785426603748@example.com
+        password:
+          type: string
+          description: Пароль
+          examples:
+            - securepassword
+      description: Тело запроса входа
     Money:
       type: integer
       format: int32
@@ -50,13 +156,67 @@ components:
       description: Денежная сумма в целых рублях без копеек
       examples:
         - 1500
-    MoneyResponse:
+    RegisterRequest:
       type: object
       required:
-        - amount
+        - email
+        - password
       properties:
-        amount:
-          $ref: '#/components/schemas/Money'
-          description: Сумма в рублях
+        email:
+          type: string
+          format: email
+          description: Email пользователя
           examples:
-            - 1500
+            - demo+1785426603748@example.com
+        password:
+          type: string
+          minLength: 8
+          description: Пароль (минимум 8 символов)
+          examples:
+            - securepassword
+      description: Тело запроса регистрации
+    User:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Идентификатор
+          examples:
+            - 42
+        email:
+          type: string
+          description: Email
+          examples:
+            - user@example.com
+        name:
+          type: string
+          description: Отображаемое имя
+          examples:
+            - Иван
+      description: Пользователь (покупатель)
+    ValidationDetail:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
+          type: string
+          description: Имя поля
+        message:
+          type: string
+          description: Описание проблемы
+    ValidationError:
+      type: object
+      properties:
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationDetail'
+          description: Список проблемных полей
+      allOf:
+        - $ref: '#/components/schemas/Error'
