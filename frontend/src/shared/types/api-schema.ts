@@ -4,16 +4,68 @@
  */
 
 export interface paths {
-    "/test-money": {
+    "/auth/login": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["TestApi_getTestMoney"];
+        get?: never;
+        put?: never;
+        /** @description Вход по email и паролю */
+        post: operations["AuthApi_login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Выход из системы */
+        post: operations["AuthApi_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Получить текущего авторизованного пользователя */
+        get: operations["AuthApi_getCurrentUser"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Регистрация нового пользователя */
+        post: operations["AuthApi_register"];
         delete?: never;
         options?: never;
         head?: never;
@@ -24,10 +76,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description Ответ после успешной регистрации или входа */
+        AuthResponse: {
+            /**
+             * @description Токен авторизации
+             * @example eyJhbGciOiJIUzI1NiIs...
+             */
+            token: string;
+            /** @description Данные пользователя */
+            user: components["schemas"]["User"];
+        };
         Error: {
             /**
              * Format: int32
-             * @description Код ошибки
+             * @description HTTP-код ошибки
              * @example 404
              */
             code: number;
@@ -37,19 +99,69 @@ export interface components {
              */
             message: string;
         };
+        /** @description Тело запроса входа */
+        LoginRequest: {
+            /**
+             * Format: email
+             * @description Email пользователя
+             * @example demo+1785426603748@example.com
+             */
+            email: string;
+            /**
+             * @description Пароль
+             * @example securepassword
+             */
+            password: string;
+        };
         /**
          * Format: int32
          * @description Денежная сумма в целых рублях без копеек
          * @example 1500
          */
         Money: number;
-        MoneyResponse: {
+        /** @description Тело запроса регистрации */
+        RegisterRequest: {
             /**
-             * @description Сумма в рублях
-             * @example 1500
+             * Format: email
+             * @description Email пользователя
+             * @example demo+1785426603748@example.com
              */
-            amount: components["schemas"]["Money"];
+            email: string;
+            /**
+             * @description Пароль (минимум 8 символов)
+             * @example securepassword
+             */
+            password: string;
         };
+        /** @description Пользователь (покупатель) */
+        User: {
+            /**
+             * Format: int32
+             * @description Идентификатор
+             * @example 42
+             */
+            id: number;
+            /**
+             * @description Email
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * @description Отображаемое имя
+             * @example Иван
+             */
+            name?: string;
+        };
+        ValidationDetail: {
+            /** @description Имя поля */
+            field: string;
+            /** @description Описание проблемы */
+            message: string;
+        };
+        ValidationError: {
+            /** @description Список проблемных полей */
+            details?: components["schemas"]["ValidationDetail"][];
+        } & components["schemas"]["Error"];
     };
     responses: never;
     parameters: never;
@@ -59,7 +171,67 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    TestApi_getTestMoney: {
+    AuthApi_login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"] | components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    AuthApi_logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ответ для успешного выхода */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    AuthApi_getCurrentUser: {
         parameters: {
             query?: never;
             header?: never;
@@ -74,7 +246,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MoneyResponse"];
+                    "application/json": components["schemas"]["User"];
                 };
             };
             /** @description An unexpected error response. */
@@ -84,6 +256,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    AuthApi_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"] | components["schemas"]["Error"];
                 };
             };
         };
