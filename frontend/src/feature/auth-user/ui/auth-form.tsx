@@ -104,6 +104,7 @@ export const AuthForm = ({
 
       <button
         type='submit'
+        data-testid={TEST_IDS.auth.submit}
         disabled={isLoading}
         className='w-full h-10 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2'
       >

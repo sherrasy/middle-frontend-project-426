@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import type { ProductInsert, UserInsert } from '../types/index.js';
+import { generatePasswordHash } from './helpers/generate-demo-password.js';
 
 export function buildProduct(
   params: Partial<ProductInsert> = {},
@@ -10,14 +11,13 @@ export function buildProduct(
   };
 }
 
-const DEMO_PASSWORD_HASH =
-  '$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGfa3ZlW';
-
-export function buildUser(params: Partial<UserInsert> = {}): UserInsert {
+export async function buildUser(
+  params: Partial<UserInsert> = {},
+): Promise<UserInsert> {
   return {
     email: faker.internet.email(),
     name: faker.person.fullName(),
-    passwordHash: DEMO_PASSWORD_HASH,
+    passwordHash: await generatePasswordHash(),
     ...params,
   };
 }
