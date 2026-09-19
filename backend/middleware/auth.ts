@@ -1,16 +1,10 @@
-import type {
-  FastifyRequest,
-  FastifyReply,
-  preHandlerHookHandler,
-} from 'fastify';
-import jwt from 'jsonwebtoken';
 import { eq } from 'drizzle-orm';
+import type { preHandlerHookHandler } from 'fastify';
+import jwt from 'jsonwebtoken';
 import { db } from '../db/index.js';
 import { users } from '../db/schema/users.js';
 import { API_MESSAGES } from '../lib/messages.js';
-
-const JWT_SECRET =
-  process.env.JWT_SECRET || 'your-super-secret-dev-key-change-me';
+import { JWT_SECRET } from '../lib/helpers/generate-token.js';
 
 declare module 'fastify' {
   interface FastifyRequest {

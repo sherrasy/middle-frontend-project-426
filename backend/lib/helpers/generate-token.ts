@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret-dev';
+export const JWT_SECRET = process.env.JWT_SECRET || 'secret-dev';
 export const SALT_ROUNDS = 10;
 
 export const generateToken = (user: {
