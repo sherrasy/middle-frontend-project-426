@@ -1,5 +1,6 @@
 @import './normalize';
 @import "tailwindcss";
+@import 'material-symbols/outlined.css';
 
 @theme {
   --font-sans: "Inter", sans-serif;

@@ -1,33 +1,61 @@
-import 'dotenv/config';
-import * as Sentry from '@sentry/node';
-import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
+import * as Sentry from '@sentry/node';
+import 'dotenv/config';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
-import { registerRoutes } from './routes/index.js';
-import seed from './db/seed.js';
+import type { FastifyError } from 'fastify';
+import Fastify from 'fastify';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as schemas from './db/schema.js';
-import fs from 'node:fs';
-import type { FastifyError } from 'fastify';
+import { db } from './db/index.js';
+import runSeeds from './db/seed/index.js';
+import { registerRoutes } from './routes/index.js';
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import { API_MESSAGES } from './lib/messages.js';
+import { sendApiError } from './lib/helpers/send-api-error.js';
 
 const SENTRY_DSN = process.env['SENTRY_DSN'];
 Sentry.init({ dsn: SENTRY_DSN });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { Pool } = pg;
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 
 Sentry.setupFastifyErrorHandler(app);
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool, { schema: schemas });
-
 await migrate(db, { migrationsFolder: path.join(__dirname, 'drizzle') });
-await seed(db);
+await runSeeds(db);
+
+app.setErrorHandler((error: FastifyError, _, reply) => {
+  Sentry.captureException(error);
+
+  if (error.validation) {
+    const details = error.validation.map((v) => ({
+      field:
+        v.params?.missingProperty ||
+        v.params?.additionalProperty ||
+        v.instancePath ||
+        'unknown',
+      message: v.message,
+    }));
+
+    return reply.code(400).send({
+      code: 400,
+      message: API_MESSAGES.common.validationError,
+      details,
+    });
+  }
+
+  if (error.code === 'FST_ERR_FAILED_ERROR_SERIALIZATION') {
+    console.error('Serialization error:', error.message);
+    return sendApiError(reply, 500, API_MESSAGES.common.internalError);
+  }
+
+  reply.code(error.statusCode || 500).send({
+    code: error.statusCode || 500,
+    message: error.message,
+  });
+});
 
 await registerRoutes(app);
 
@@ -44,11 +72,6 @@ if (fs.existsSync(publicDir)) {
       .send(fs.createReadStream(path.join(publicDir, 'index.html')));
   });
 }
-
-app.setErrorHandler((error: FastifyError, request, reply) => {
-  Sentry.captureException(error);
-  reply.code(error.statusCode || 500).send({ error: error.message });
-});
 
 const port = Number(process.env.PORT) || 3000;
 await app.listen({ port, host: '0.0.0.0' }, (err, address) => {

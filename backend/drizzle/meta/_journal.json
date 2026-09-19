@@ -8,6 +8,20 @@
       "when": 1789065085042,
       "tag": "0000_puzzling_spirit",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789561781494,
+      "tag": "0001_sparkling_ultimates",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789580061838,
+      "tag": "0002_lively_harpoon",
+      "breakpoints": true
     }
   ]
 }
