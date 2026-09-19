@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ROUTES } from '../constants/routes';
 import { LOCALSTORAGE_NAMES } from '../constants/localstorage-names';
 
 export const api = axios.create({
@@ -21,11 +20,6 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem(LOCALSTORAGE_NAMES.token);
-      localStorage.removeItem(LOCALSTORAGE_NAMES.user);
-      window.location.href = ROUTES.MAIN;
-    }
     return Promise.reject(error);
   },
 );

@@ -8,7 +8,7 @@ export const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   if (isLoading) {
-    <Loader />;
+    return <Loader />;
   }
 
   if (!isAuthenticated) {
