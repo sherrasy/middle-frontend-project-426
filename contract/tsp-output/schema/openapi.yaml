@@ -4,6 +4,7 @@ info:
   version: 0.0.0
 tags:
   - name: Auth
+  - name: Catalog
 paths:
   /auth/login:
     post:
@@ -97,6 +98,56 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RegisterRequest'
+  /catalog/categories:
+    get:
+      operationId: CatalogApi_getCategories
+      description: Получить список категорий
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Catalog
+  /catalog/products:
+    get:
+      operationId: CatalogApi_getProducts
+      description: Получить список товаров с фильтрацией и пагинацией
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/CatalogQuery'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error'
+      tags:
+        - Catalog
 components:
   schemas:
     AuthResponse:
@@ -114,6 +165,69 @@ components:
           $ref: '#/components/schemas/User'
           description: Данные пользователя
       description: Ответ после успешной регистрации или входа
+    CatalogQuery:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+          description: ID категории для фильтрации
+          examples:
+            - 1
+        search:
+          type: string
+          description: Поиск по названию
+          examples:
+            - Ryzen
+        priceFrom:
+          $ref: '#/components/schemas/Money'
+          description: Минимальная цена
+          examples:
+            - 10000
+        priceTo:
+          $ref: '#/components/schemas/Money'
+          description: Максимальная цена
+          examples:
+            - 50000
+        onlyAvailable:
+          type: boolean
+          description: Только доступные товары
+          examples:
+            - false
+        page:
+          type: integer
+          format: int32
+          minimum: 1
+          description: Номер страницы (начиная с 1)
+          examples:
+            - 1
+        pageSize:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+          description: Размер страницы
+          examples:
+            - 12
+      description: Параметры фильтрации и пагинации
+    Category:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Идентификатор
+          examples:
+            - 1
+        name:
+          type: string
+          description: Название категории
+          examples:
+            - Процессоры
+      description: Категория товара
     Error:
       type: object
       required:
@@ -156,6 +270,96 @@ components:
       description: Денежная сумма в целых рублях без копеек
       examples:
         - 1500
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+        - description
+        - image
+        - isAccessible
+        - categoryId
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Идентификатор
+          examples:
+            - 1
+        name:
+          type: string
+          description: Название
+          examples:
+            - AMD Ryzen 5 7600X
+        price:
+          $ref: '#/components/schemas/Money'
+          description: Цена в рублях
+          examples:
+            - 21990
+        description:
+          type: string
+          description: Краткое описание
+          examples:
+            - Процессор 6 ядер, 12 потоков, сокет AM5.
+        image:
+          anyOf:
+            - type: string
+            - type: 'null'
+          description: URL изображения или null
+          examples:
+            - https://example.com/ryzen5.jpg
+        isAccessible:
+          type: boolean
+          description: Доступность товара
+          examples:
+            - true
+        categoryId:
+          type: integer
+          format: int32
+          description: Идентификатор категории
+          examples:
+            - 1
+      description: Товар
+    ProductList:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - pageSize
+        - totalPages
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+          description: Товары на текущей странице
+        total:
+          type: integer
+          format: int32
+          description: Общее количество товаров
+          examples:
+            - 150
+        page:
+          type: integer
+          format: int32
+          description: Номер текущей страницы
+          examples:
+            - 1
+        pageSize:
+          type: integer
+          format: int32
+          description: Размер страницы
+          examples:
+            - 12
+        totalPages:
+          type: integer
+          format: int32
+          description: Общее количество страниц
+          examples:
+            - 13
+      description: Список товаров с пагинацией
     RegisterRequest:
       type: object
       required:

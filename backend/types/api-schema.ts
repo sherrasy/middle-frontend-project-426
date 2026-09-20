@@ -122,6 +122,36 @@ const ComponentsSchemasRegisterRequest = T.Object({
   email: T.String({ format: 'email' }),
   password: T.String({ minLength: 8 })
 })
+const ComponentsSchemasCategory = T.Object({
+  id: T.Integer({ format: 'int32' }),
+  name: T.String()
+})
+const ComponentsSchemasMoney = T.Integer({ format: 'int32', minimum: 0 })
+const ComponentsSchemasCatalogQuery = T.Object({
+  categoryId: T.Optional(T.Integer({ format: 'int32' })),
+  search: T.Optional(T.String()),
+  priceFrom: T.Optional(CloneType(ComponentsSchemasMoney)),
+  priceTo: T.Optional(T.Integer({ format: 'int32', minimum: 0 })),
+  onlyAvailable: T.Optional(T.Boolean()),
+  page: T.Optional(T.Integer({ format: 'int32', minimum: 1 })),
+  pageSize: T.Optional(T.Integer({ format: 'int32', minimum: 1, maximum: 100 }))
+})
+const ComponentsSchemasProduct = T.Object({
+  id: T.Integer({ format: 'int32' }),
+  name: T.String(),
+  price: T.Integer({ format: 'int32', minimum: 0 }),
+  description: T.String(),
+  image: T.Union([T.String(), T.Null()]),
+  isAccessible: T.Boolean(),
+  categoryId: T.Integer({ format: 'int32' })
+})
+const ComponentsSchemasProductList = T.Object({
+  items: T.Array(CloneType(ComponentsSchemasProduct)),
+  total: T.Integer({ format: 'int32' }),
+  page: T.Integer({ format: 'int32' }),
+  pageSize: T.Integer({ format: 'int32' }),
+  totalPages: T.Integer({ format: 'int32' })
+})
 
 const schema = {
   '/auth/login': {
@@ -201,15 +231,56 @@ const schema = {
         )
       ])
     }
+  },
+  '/catalog/categories': {
+    GET: {
+      args: T.Void(),
+      data: T.Array(CloneType(ComponentsSchemasCategory), {
+        'x-status-code': '200',
+        'x-content-type': 'application/json'
+      }),
+      error: T.Union([
+        CloneType(ComponentsSchemasError, {
+          'x-status-code': 'default',
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
+  },
+  '/catalog/products': {
+    GET: {
+      args: T.Object({
+        query: T.Object({
+          query: CloneType(ComponentsSchemasCatalogQuery, { 'x-in': 'query' })
+        })
+      }),
+      data: CloneType(ComponentsSchemasProductList, {
+        'x-status-code': '200',
+        'x-content-type': 'application/json'
+      }),
+      error: T.Union([
+        T.Union(
+          [
+            CloneType(ComponentsSchemasValidationError),
+            CloneType(ComponentsSchemasError)
+          ],
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
   }
 }
 
 const _components = {
   schemas: {
     AuthResponse: CloneType(ComponentsSchemasAuthResponse),
+    CatalogQuery: CloneType(ComponentsSchemasCatalogQuery, { 'x-in': 'query' }),
+    Category: CloneType(ComponentsSchemasCategory),
     Error: CloneType(ComponentsSchemasError),
     LoginRequest: CloneType(ComponentsSchemasLoginRequest),
     Money: T.Integer({ format: 'int32', minimum: 0 }),
+    Product: CloneType(ComponentsSchemasProduct),
+    ProductList: CloneType(ComponentsSchemasProductList),
     RegisterRequest: CloneType(ComponentsSchemasRegisterRequest),
     User: T.Object({
       id: T.Integer({ format: 'int32' }),

@@ -72,6 +72,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/catalog/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Получить список категорий */
+        get: operations["CatalogApi_getCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Получить список товаров с фильтрацией и пагинацией */
+        get: operations["CatalogApi_getProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -85,6 +119,61 @@ export interface components {
             token: string;
             /** @description Данные пользователя */
             user: components["schemas"]["User"];
+        };
+        /** @description Параметры фильтрации и пагинации */
+        CatalogQuery: {
+            /**
+             * Format: int32
+             * @description ID категории для фильтрации
+             * @example 1
+             */
+            categoryId?: number;
+            /**
+             * @description Поиск по названию
+             * @example Ryzen
+             */
+            search?: string;
+            /**
+             * @description Минимальная цена
+             * @example 10000
+             */
+            priceFrom?: components["schemas"]["Money"];
+            /**
+             * @description Максимальная цена
+             * @example 50000
+             */
+            priceTo?: components["schemas"]["Money"];
+            /**
+             * @description Только доступные товары
+             * @example false
+             */
+            onlyAvailable?: boolean;
+            /**
+             * Format: int32
+             * @description Номер страницы (начиная с 1)
+             * @example 1
+             */
+            page?: number;
+            /**
+             * Format: int32
+             * @description Размер страницы
+             * @example 12
+             */
+            pageSize?: number;
+        };
+        /** @description Категория товара */
+        Category: {
+            /**
+             * Format: int32
+             * @description Идентификатор
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Название категории
+             * @example Процессоры
+             */
+            name: string;
         };
         Error: {
             /**
@@ -119,6 +208,75 @@ export interface components {
          * @example 1500
          */
         Money: number;
+        /** @description Товар */
+        Product: {
+            /**
+             * Format: int32
+             * @description Идентификатор
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Название
+             * @example AMD Ryzen 5 7600X
+             */
+            name: string;
+            /**
+             * @description Цена в рублях
+             * @example 21990
+             */
+            price: components["schemas"]["Money"];
+            /**
+             * @description Краткое описание
+             * @example Процессор 6 ядер, 12 потоков, сокет AM5.
+             */
+            description: string;
+            /**
+             * @description URL изображения или null
+             * @example https://example.com/ryzen5.jpg
+             */
+            image: string | null;
+            /**
+             * @description Доступность товара
+             * @example true
+             */
+            isAccessible: boolean;
+            /**
+             * Format: int32
+             * @description Идентификатор категории
+             * @example 1
+             */
+            categoryId: number;
+        };
+        /** @description Список товаров с пагинацией */
+        ProductList: {
+            /** @description Товары на текущей странице */
+            items: components["schemas"]["Product"][];
+            /**
+             * Format: int32
+             * @description Общее количество товаров
+             * @example 150
+             */
+            total: number;
+            /**
+             * Format: int32
+             * @description Номер текущей страницы
+             * @example 1
+             */
+            page: number;
+            /**
+             * Format: int32
+             * @description Размер страницы
+             * @example 12
+             */
+            pageSize: number;
+            /**
+             * Format: int32
+             * @description Общее количество страниц
+             * @example 13
+             */
+            totalPages: number;
+        };
         /** @description Тело запроса регистрации */
         RegisterRequest: {
             /**
@@ -280,6 +438,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"] | components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CatalogApi_getCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Category"][];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CatalogApi_getProducts: {
+        parameters: {
+            query: {
+                query: components["schemas"]["CatalogQuery"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductList"];
                 };
             };
             /** @description An unexpected error response. */

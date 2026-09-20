@@ -5,6 +5,8 @@ import { MainLayout } from '../layout/layout';
 import { SignUpPage } from '@/pages/sign-up';
 import { SignInPage } from '@/pages/sign-in';
 import { RequireAuth } from './protected-route';
+import { CabinetPage } from '@/pages/cabinet';
+import { CatalogPage } from '@/pages/catalog';
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +18,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.SIGNUP, element: <SignUpPage /> },
       {
         path: ROUTES.CATALOG,
-        element: <HomePage />,
+        element: <CatalogPage />,
       },
       {
         path: ROUTES.CART,
@@ -26,7 +28,7 @@ export const router = createBrowserRouter([
         path: ROUTES.CABINET,
         element: (
           <RequireAuth>
-            <HomePage />
+            <CabinetPage />
           </RequireAuth>
         ),
       },
