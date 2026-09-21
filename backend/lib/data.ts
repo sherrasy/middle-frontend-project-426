@@ -7,6 +7,13 @@ export function buildProduct(
 ): ProductInsert {
   return {
     name: faker.commerce.productName(),
+    description: faker.commerce.productDescription(),
+    price: faker.number.int({ min: 1000, max: 150000 }),
+    image: faker.datatype.boolean({ probability: 0.9 })
+      ? faker.image.url()
+      : null,
+    isAccessible: faker.datatype.boolean({ probability: 0.9 }),
+    categoryId: params.categoryId ?? 1,
     ...params,
   };
 }

@@ -5,22 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1789065085042,
-      "tag": "0000_puzzling_spirit",
+      "when": 1790005076473,
+      "tag": "0000_grey_ikaris",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1789561781494,
-      "tag": "0001_sparkling_ultimates",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1789580061838,
-      "tag": "0002_lively_harpoon",
+      "when": 1790007656285,
+      "tag": "0001_cultured_loa",
       "breakpoints": true
     }
   ]
