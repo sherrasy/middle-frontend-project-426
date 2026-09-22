@@ -19,7 +19,7 @@ export const SignUpPage = () => {
     });
 
   return (
-    <div className='w-full max-w-md bg-white rounded-lg shadow-sm border border-gray-200 p-8'>
+    <div className='mx-auto w-full max-w-md bg-white rounded-lg shadow-sm border border-gray-200 p-8'>
       <AuthForm
         mode='registration'
         onSubmit={onSubmit}
