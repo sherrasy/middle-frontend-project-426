@@ -1,7 +1,7 @@
 import { count } from 'drizzle-orm';
 import type { FastifyPluginAsync } from 'fastify';
 import { db } from '../db/index.js';
-import { categories, products } from '../db/schema/index.js'; // Укажите правильный путь к схеме
+import { categories, products } from '../db/schema/index.js';
 import { sendApiError } from '../lib/helpers/send-api-error.js';
 import { API_MESSAGES } from '../lib/messages.js';
 import { components } from '../types/api-schema.js';

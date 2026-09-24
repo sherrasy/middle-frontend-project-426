@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { categoryNames } from '../../lib/consts.js';
 import { categories, products } from '../schema/products.js';
 import { buildProduct } from '../../lib/data.js';
@@ -27,6 +27,16 @@ export const seedProducts = async (db: DrizzleDB) => {
     }
   }
 
+  const [existingProduct] = await db
+    .select({ id: products.id })
+    .from(products)
+    .limit(1);
+
+  if (existingProduct) {
+    console.log('Seed skipped: products already exist');
+    return;
+  }
+
   const productsToInsert = [];
 
   productsToInsert.push(
@@ -43,9 +53,14 @@ export const seedProducts = async (db: DrizzleDB) => {
       price: 150000,
     }),
     buildProduct({
-      name: 'Дешевый товар ',
+      name: 'Дешевый товар',
       categoryId: createdCategories[2].id,
       price: 990,
+    }),
+    buildProduct({
+      name: 'RTX 4090',
+      categoryId: createdCategories[3].id,
+      price: 199990,
     }),
   );
 
@@ -60,18 +75,18 @@ export const seedProducts = async (db: DrizzleDB) => {
     }
   }
 
-  for (const prod of productsToInsert) {
-    const existing = await db
-      .select()
-      .from(products)
-      .where(eq(products.name, prod.name))
-      .limit(1);
-    if (existing.length === 0) {
-      await db.insert(products).values(prod);
-    }
+  const existingNames = await db.select({ name: products.name }).from(products);
+  const existingNamesSet = new Set(existingNames.map((p) => p.name));
+
+  const newProducts = productsToInsert.filter(
+    (p) => !existingNamesSet.has(p.name),
+  );
+
+  if (newProducts.length > 0) {
+    await db.insert(products).values(newProducts);
   }
 
   console.log(
-    `✅ Seed completed: ${createdCategories.length} categories, ${productsToInsert.length} products.`,
+    `✅ Seed completed: ${createdCategories.length} categories, ${newProducts.length} new products.`,
   );
 };
