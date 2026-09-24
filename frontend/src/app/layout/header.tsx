@@ -28,6 +28,7 @@ export const Header = () => {
         <nav className='flex items-center gap-6'>
           <Link
             to={ROUTES.CATALOG}
+            data-testid={TEST_IDS.nav.catalog}
             className='text-base font-medium text-gray-700 hover:text-gray-900 transition-colors'
           >
             Каталог
