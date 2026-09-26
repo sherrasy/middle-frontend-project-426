@@ -38,8 +38,8 @@
  * }} ComponentType
  */
 
-import { Type as T, TypeRegistry, Kind, CloneType } from '@sinclair/typebox';
-import { Value } from '@sinclair/typebox/value';
+import { Type as T, TypeRegistry, Kind, CloneType } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
 
 /**
  * @typedef {{
@@ -65,68 +65,68 @@ const Binary = () => {
    * @returns {boolean}
    */
   function BinaryCheck(schema, value) {
-    const type = Object.prototype.toString.call(value);
+    const type = Object.prototype.toString.call(value)
     return (
       type === '[object Blob]' ||
       type === '[object File]' ||
       type === '[object String]' ||
       type === '[object Uint8Array]'
-    );
+    )
   }
 
-  if (!TypeRegistry.Has('Binary')) TypeRegistry.Set('Binary', BinaryCheck);
+  if (!TypeRegistry.Has('Binary')) TypeRegistry.Set('Binary', BinaryCheck)
 
-  return /** @type {TBinary} */ {
+  return /** @type {TBinary} */ ({
     anyOf: [
       {
         type: 'object',
-        additionalProperties: true,
+        additionalProperties: true
       },
       {
         type: 'string',
-        format: 'binary',
-      },
+        format: 'binary'
+      }
     ],
-    [Kind]: 'Binary',
-  };
-};
+    [Kind]: 'Binary'
+  })
+}
 
 const ComponentsSchemasUser = T.Object({
   id: T.Integer({ format: 'int32' }),
   email: T.String(),
-  name: T.Optional(T.String()),
-});
+  name: T.Optional(T.String())
+})
 const ComponentsSchemasAuthResponse = T.Object({
   token: T.String(),
-  user: CloneType(ComponentsSchemasUser),
-});
+  user: CloneType(ComponentsSchemasUser)
+})
 const ComponentsSchemasValidationDetail = T.Object({
   field: T.String(),
-  message: T.String(),
-});
+  message: T.String()
+})
 const ComponentsSchemasError = T.Object({
   code: T.Integer({ format: 'int32' }),
-  message: T.String(),
-});
+  message: T.String()
+})
 const ComponentsSchemasValidationError = T.Intersect([
   CloneType(ComponentsSchemasError),
   T.Object({
-    details: T.Optional(T.Array(CloneType(ComponentsSchemasValidationDetail))),
-  }),
-]);
+    details: T.Optional(T.Array(CloneType(ComponentsSchemasValidationDetail)))
+  })
+])
 const ComponentsSchemasLoginRequest = T.Object({
   email: T.String({ format: 'email' }),
-  password: T.String(),
-});
+  password: T.String()
+})
 const ComponentsSchemasRegisterRequest = T.Object({
   email: T.String({ format: 'email' }),
-  password: T.String({ minLength: 8 }),
-});
+  password: T.String({ minLength: 8 })
+})
 const ComponentsSchemasCategory = T.Object({
   id: T.Integer({ format: 'int32' }),
-  name: T.String(),
-});
-const ComponentsSchemasMoney = T.Integer({ format: 'int32', minimum: 0 });
+  name: T.String()
+})
+const ComponentsSchemasMoney = T.Integer({ format: 'int32', minimum: 0 })
 const ComponentsSchemasCatalogQuery = T.Object({
   categoryId: T.Optional(T.Integer({ format: 'int32' })),
   search: T.Optional(T.String()),
@@ -134,10 +134,8 @@ const ComponentsSchemasCatalogQuery = T.Object({
   priceTo: T.Optional(T.Integer({ format: 'int32', minimum: 0 })),
   onlyAvailable: T.Optional(T.Boolean()),
   page: T.Optional(T.Integer({ format: 'int32', minimum: 1 })),
-  pageSize: T.Optional(
-    T.Integer({ format: 'int32', minimum: 1, maximum: 100 }),
-  ),
-});
+  pageSize: T.Optional(T.Integer({ format: 'int32', minimum: 1, maximum: 100 }))
+})
 const ComponentsSchemasProduct = T.Object({
   id: T.Integer({ format: 'int32' }),
   name: T.String(),
@@ -145,38 +143,44 @@ const ComponentsSchemasProduct = T.Object({
   description: T.String(),
   image: T.Union([T.String(), T.Null()]),
   isAccessible: T.Boolean(),
-  categoryId: T.Integer({ format: 'int32' }),
-});
+  categoryId: T.Integer({ format: 'int32' })
+})
 const ComponentsSchemasProductList = T.Object({
   items: T.Array(CloneType(ComponentsSchemasProduct)),
   total: T.Integer({ format: 'int32' }),
   page: T.Integer({ format: 'int32' }),
   pageSize: T.Integer({ format: 'int32' }),
-  totalPages: T.Integer({ format: 'int32' }),
-});
+  totalPages: T.Integer({ format: 'int32' })
+})
+const ComponentsSchemasPromoBlock = T.Object({
+  id: T.Integer({ format: 'int32' }),
+  title: T.String(),
+  description: T.String(),
+  product: CloneType(ComponentsSchemasProduct)
+})
 
 const schema = {
   '/auth/login': {
     POST: {
       args: T.Object({
         body: CloneType(ComponentsSchemasLoginRequest, {
-          'x-content-type': 'application/json',
-        }),
+          'x-content-type': 'application/json'
+        })
       }),
       data: CloneType(ComponentsSchemasAuthResponse, {
         'x-status-code': '200',
-        'x-content-type': 'application/json',
+        'x-content-type': 'application/json'
       }),
       error: T.Union([
         T.Union(
           [
             CloneType(ComponentsSchemasValidationError),
-            CloneType(ComponentsSchemasError),
+            CloneType(ComponentsSchemasError)
           ],
-          { 'x-status-code': 'default', 'x-content-type': 'application/json' },
-        ),
-      ]),
-    },
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
   },
   '/auth/logout': {
     POST: {
@@ -185,10 +189,10 @@ const schema = {
       error: T.Union([
         CloneType(ComponentsSchemasError, {
           'x-status-code': 'default',
-          'x-content-type': 'application/json',
-        }),
-      ]),
-    },
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
   },
   '/auth/me': {
     GET: {
@@ -197,81 +201,96 @@ const schema = {
         {
           id: T.Integer({ format: 'int32' }),
           email: T.String(),
-          name: T.Optional(T.String()),
+          name: T.Optional(T.String())
         },
         {
           'x-status-code': '200',
-          'x-content-type': 'application/json',
-        },
+          'x-content-type': 'application/json'
+        }
       ),
       error: T.Union([
         CloneType(ComponentsSchemasError, {
           'x-status-code': 'default',
-          'x-content-type': 'application/json',
-        }),
-      ]),
-    },
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
   },
   '/auth/register': {
     POST: {
       args: T.Object({
         body: CloneType(ComponentsSchemasRegisterRequest, {
-          'x-content-type': 'application/json',
-        }),
+          'x-content-type': 'application/json'
+        })
       }),
       data: CloneType(ComponentsSchemasAuthResponse, {
         'x-status-code': '200',
-        'x-content-type': 'application/json',
+        'x-content-type': 'application/json'
       }),
       error: T.Union([
         T.Union(
           [
             CloneType(ComponentsSchemasValidationError),
-            CloneType(ComponentsSchemasError),
+            CloneType(ComponentsSchemasError)
           ],
-          { 'x-status-code': 'default', 'x-content-type': 'application/json' },
-        ),
-      ]),
-    },
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
   },
   '/catalog/categories': {
     GET: {
       args: T.Void(),
       data: T.Array(CloneType(ComponentsSchemasCategory), {
         'x-status-code': '200',
-        'x-content-type': 'application/json',
+        'x-content-type': 'application/json'
       }),
       error: T.Union([
         CloneType(ComponentsSchemasError, {
           'x-status-code': 'default',
-          'x-content-type': 'application/json',
-        }),
-      ]),
-    },
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
   },
   '/catalog/products': {
     GET: {
       args: T.Object({
         query: T.Object({
-          query: CloneType(ComponentsSchemasCatalogQuery, { 'x-in': 'query' }),
-        }),
+          query: CloneType(ComponentsSchemasCatalogQuery, { 'x-in': 'query' })
+        })
       }),
       data: CloneType(ComponentsSchemasProductList, {
         'x-status-code': '200',
-        'x-content-type': 'application/json',
+        'x-content-type': 'application/json'
       }),
       error: T.Union([
         T.Union(
           [
             CloneType(ComponentsSchemasValidationError),
-            CloneType(ComponentsSchemasError),
+            CloneType(ComponentsSchemasError)
           ],
-          { 'x-status-code': 'default', 'x-content-type': 'application/json' },
-        ),
-      ]),
-    },
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
   },
-};
+  '/promo': {
+    GET: {
+      args: T.Void(),
+      data: T.Array(CloneType(ComponentsSchemasPromoBlock), {
+        'x-status-code': '200',
+        'x-content-type': 'application/json'
+      }),
+      error: T.Union([
+        CloneType(ComponentsSchemasError, {
+          'x-status-code': 'default',
+          'x-content-type': 'application/json'
+        })
+      ])
+    }
+  }
+}
 
 const _components = {
   schemas: {
@@ -283,15 +302,16 @@ const _components = {
     Money: T.Integer({ format: 'int32', minimum: 0 }),
     Product: CloneType(ComponentsSchemasProduct),
     ProductList: CloneType(ComponentsSchemasProductList),
+    PromoBlock: CloneType(ComponentsSchemasPromoBlock),
     RegisterRequest: CloneType(ComponentsSchemasRegisterRequest),
     User: T.Object({
       id: T.Integer({ format: 'int32' }),
       email: T.String(),
-      name: T.Optional(T.String()),
+      name: T.Optional(T.String())
     }),
     ValidationDetail: CloneType(ComponentsSchemasValidationDetail),
-    ValidationError: CloneType(ComponentsSchemasValidationError),
-  },
-};
+    ValidationError: CloneType(ComponentsSchemasValidationError)
+  }
+}
 
-export { schema, _components as components };
+export { schema, _components as components }

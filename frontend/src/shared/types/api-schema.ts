@@ -106,6 +106,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/promo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Получить список промо-блоков для главной страницы */
+        get: operations["PromoApi_getPromoBlocks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -276,6 +293,27 @@ export interface components {
              * @example 13
              */
             totalPages: number;
+        };
+        /** @description Промо-блок */
+        PromoBlock: {
+            /**
+             * Format: int32
+             * @description Идентификатор промо-блока
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Заголовок промо-блока
+             * @example Мощный процессор для игр
+             */
+            title: string;
+            /**
+             * @description Текст промо-блока
+             * @example AMD Ryzen 5 7600X — идеальный выбор для гейминга.
+             */
+            description: string;
+            /** @description Рекламируемый товар */
+            product: components["schemas"]["Product"];
         };
         /** @description Тело запроса регистрации */
         RegisterRequest: {
@@ -507,6 +545,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"] | components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    PromoApi_getPromoBlocks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PromoBlock"][];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
