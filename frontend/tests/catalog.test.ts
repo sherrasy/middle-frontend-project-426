@@ -14,7 +14,7 @@ test.describe('Catalog Flow', () => {
   });
 
   // 1. Каталог загружается, карточки товаров видны. В карточке есть название, цена и доступность.
-  test(' should load catalog', async ({ page }) => {
+  test('should load catalog', async ({ page }) => {
     const firstItem = page.getByTestId(TEST_IDS.catalog.item).first();
     await expect(firstItem).toBeVisible();
 
