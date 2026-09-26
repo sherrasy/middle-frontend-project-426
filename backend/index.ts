@@ -19,7 +19,14 @@ Sentry.init({ dsn: SENTRY_DSN });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const app = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
+const app = Fastify({
+  logger: true,
+  ajv: {
+    customOptions: {
+      strict: 'log',
+    },
+  },
+}).withTypeProvider<TypeBoxTypeProvider>();
 
 Sentry.setupFastifyErrorHandler(app);
 
