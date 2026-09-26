@@ -17,12 +17,14 @@ export const Header = () => {
       <div className='max-w-6xl mx-auto px-4 py-4 flex items-center justify-between'>
         <div className='flex items-center gap-2'>
           <div className='w-3 h-3 bg-blue-500 rounded-sm'></div>
-          <h1
-            className='text-xl font-bold text-gray-900'
-            data-testid={TEST_IDS.smoke}
-          >
-            Комплектующие
-          </h1>
+          <Link to={ROUTES.MAIN}>
+            <h1
+              className='text-xl font-bold text-gray-900'
+              data-testid={TEST_IDS.smoke}
+            >
+              Комплектующие
+            </h1>{' '}
+          </Link>
         </div>
 
         <nav className='flex items-center gap-6'>

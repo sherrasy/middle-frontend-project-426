@@ -32,5 +32,9 @@ export const TEST_IDS = {
     search: 'filter-search',
     reset: 'filter-reset',
   },
+  home: {
+    list: 'home-promo',
+    item: 'home-promo-item',
+  },
   smoke: 'main-heading',
 } as const;
