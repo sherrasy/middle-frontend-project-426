@@ -156,6 +156,24 @@ model ProductList {
   totalPages: int32;
 }
 
+@doc("Промо-блок")
+model PromoBlock {
+  @doc("Идентификатор промо-блока")
+  @example(1)
+  id: int32;
+
+  @doc("Заголовок промо-блока")
+  @example("Мощный процессор для игр")
+  title: string;
+
+  @doc("Текст промо-блока")
+  @example("AMD Ryzen 5 7600X — идеальный выбор для гейминга.")
+  description: string;
+
+  @doc("Рекламируемый товар")
+  product: Product;
+}
+
 @doc("Параметры фильтрации и пагинации")
 model CatalogQuery {
   @doc("ID категории для фильтрации")
@@ -231,4 +249,11 @@ interface CatalogApi {
   @route("/categories")
   @doc("Получить список категорий")
   getCategories(): Category[] | Error;
+}
+@route("/promo")
+@tag("Promo")
+interface PromoApi {
+  @get
+  @doc("Получить список промо-блоков для главной страницы")
+  getPromoBlocks(): PromoBlock[] | Error;
 }

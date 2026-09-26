@@ -7,6 +7,7 @@ import { SignInPage } from '@/pages/sign-in';
 import { RequireAuth } from './protected-route';
 import { CabinetPage } from '@/pages/cabinet';
 import { CatalogPage } from '@/pages/catalog';
+import { ProductPage } from '@/pages/product';
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.CATALOG,
         element: <CatalogPage />,
+      },
+      {
+        path: ROUTES.PRODUCT,
+        element: <ProductPage />,
       },
       {
         path: ROUTES.CART,

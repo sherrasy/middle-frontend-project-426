@@ -1,7 +1,6 @@
 import { Page } from '@playwright/test';
-// Импортируйте ваши фикстуры.
-// Предполагаем, что PRODUCTS_FIXTURE имеет структуру { items: Product[], total: number, ... }
 import { CATRGORIES_FIXTURE, PRODUCTS_FIXTURE } from './catalogData';
+import { PROMO_BLOCKS_FIXTURE } from './promoData';
 
 export interface MockResponse<T = unknown> {
   status: number;
@@ -77,6 +76,16 @@ export const mockProductsEmpty = async (page: Page) => {
         pageSize: 3,
         totalPages: 0,
       }),
+    });
+  });
+};
+
+export const mockPromoBlocks = async (page: Page) => {
+  await page.route('**/api/promo', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(PROMO_BLOCKS_FIXTURE),
     });
   });
 };

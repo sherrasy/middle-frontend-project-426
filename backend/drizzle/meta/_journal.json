@@ -15,6 +15,13 @@
       "when": 1790007656285,
       "tag": "0001_cultured_loa",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790450314399,
+      "tag": "0002_lush_overlord",
+      "breakpoints": true
     }
   ]
 }
