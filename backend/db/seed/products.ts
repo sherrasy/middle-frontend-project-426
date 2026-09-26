@@ -1,9 +1,9 @@
-import { eq, inArray } from 'drizzle-orm';
-import { categoryNames } from '../../lib/consts.js';
-import { categories, products } from '../schema/products.js';
-import { buildProduct } from '../../lib/data.js';
 import { faker } from '@faker-js/faker';
+import { eq } from 'drizzle-orm';
+import { categoryNames } from '../../lib/consts.js';
+import { buildProduct } from '../../lib/data.js';
 import { DrizzleDB } from '../../types/index.js';
+import { categories, products } from '../schema/products.js';
 
 export const seedProducts = async (db: DrizzleDB) => {
   const createdCategories = [];
