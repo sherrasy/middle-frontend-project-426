@@ -54,7 +54,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 : 'bg-gray-400 text-white'
             }`}
             data-testid={TEST_IDS.catalog.itemAvailability}
-            data-availabile={isAccessible}
+            data-available={isAccessible}
           >
             {isAccessible ? 'В НАЛИЧИИ' : 'НЕТ В НАЛИЧИИ'}
           </span>
