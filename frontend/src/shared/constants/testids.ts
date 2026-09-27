@@ -5,6 +5,7 @@ export const TEST_IDS = {
     signout: 'nav-signout',
     account: 'nav-account',
     catalog: 'nav-catalog',
+    cart: 'nav-cart',
   },
   auth: {
     email: 'auth-email',
@@ -35,6 +36,18 @@ export const TEST_IDS = {
   home: {
     list: 'home-promo',
     item: 'home-promo-item',
+  },
+  product: {
+    name: 'product-name',
+    price: 'product-price',
+    description: 'product-description',
+    addToCart: 'product-add-to-cart',
+  },
+  cart: {
+    item: 'cart-item',
+    itemQty: 'cart-item-qty',
+    itemRemove: 'cart-item-remove',
+    total: 'cart-total',
   },
   smoke: 'main-heading',
 } as const;
