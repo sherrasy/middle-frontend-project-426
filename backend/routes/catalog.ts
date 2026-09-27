@@ -1,4 +1,4 @@
-import { count } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import type { FastifyPluginAsync } from 'fastify';
 import { db } from '../db/index.js';
 import { categories, products } from '../db/schema/index.js';
@@ -9,6 +9,7 @@ import type {
   CatalogQueryType,
   CategoryType,
   ProductListType,
+  ProductType,
 } from '../types/catalog.js';
 import { ErrorData, ValidationErrorData } from '../types/common.js';
 import { getProductConditions } from '../lib/helpers/get-product-conditions.js';
@@ -32,6 +33,44 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
           .orderBy(categories.name);
 
         return reply.code(200).send(result satisfies CategoryType[]);
+      } catch (error) {
+        return sendApiError(reply, 500, API_MESSAGES.common.internalError);
+      }
+    },
+  });
+
+  fastify.get<{
+    Params: { id: number };
+    Reply: ProductType | ValidationErrorData | ErrorData;
+  }>('/products/:id', {
+    schema: {
+      params: T.Object({
+        id: T.Integer({ minimum: 1, description: 'Идентификатор товара' }),
+      }),
+      response: {
+        200: components.schemas.Product,
+        400: components.schemas.ValidationError,
+        404: components.schemas.Error,
+        500: components.schemas.Error,
+      },
+    },
+    handler: async (request, reply) => {
+      const { id } = request.params;
+
+      try {
+        const result = await db
+          .select()
+          .from(products)
+          .where(eq(products.id, id))
+          .limit(1);
+
+        const product = result[0];
+
+        if (!product) {
+          return sendApiError(reply, 404, API_MESSAGES.common.notFound);
+        }
+
+        return reply.code(200).send(product satisfies ProductType);
       } catch (error) {
         return sendApiError(reply, 500, API_MESSAGES.common.internalError);
       }

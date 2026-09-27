@@ -249,6 +249,11 @@ interface CatalogApi {
   @route("/categories")
   @doc("Получить список категорий")
   getCategories(): Category[] | Error;
+
+  @get
+  @route("/products/{id}")
+  @doc("Получить один товар")
+  getProduct(@path id: int32): Product | ValidationError | Error;
 }
 @route("/promo")
 @tag("Promo")

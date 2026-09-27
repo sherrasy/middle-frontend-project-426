@@ -275,6 +275,28 @@ const schema = {
       ])
     }
   },
+  '/catalog/products/{id}': {
+    GET: {
+      args: T.Object({
+        params: T.Object({
+          id: T.Integer({ format: 'int32', 'x-in': 'path' })
+        })
+      }),
+      data: CloneType(ComponentsSchemasProduct, {
+        'x-status-code': '200',
+        'x-content-type': 'application/json'
+      }),
+      error: T.Union([
+        T.Union(
+          [
+            CloneType(ComponentsSchemasValidationError),
+            CloneType(ComponentsSchemasError)
+          ],
+          { 'x-status-code': 'default', 'x-content-type': 'application/json' }
+        )
+      ])
+    }
+  },
   '/promo': {
     GET: {
       args: T.Void(),
