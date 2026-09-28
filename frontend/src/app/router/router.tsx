@@ -8,6 +8,7 @@ import { RequireAuth } from './protected-route';
 import { CabinetPage } from '@/pages/cabinet';
 import { CatalogPage } from '@/pages/catalog';
 import { ProductPage } from '@/pages/product';
+import { CartPage } from '@/pages/cart';
 
 export const router = createBrowserRouter([
   {
@@ -27,7 +28,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.CART,
-        element: <HomePage />,
+        element: <CartPage />,
       },
       {
         path: ROUTES.CABINET,

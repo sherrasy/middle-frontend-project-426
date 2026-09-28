@@ -3,12 +3,13 @@ import { TEST_IDS } from '@/shared/constants/testids';
 import { BaseCard } from '@/shared/ui/base-card';
 import { Badge } from '@/shared/ui/badge';
 import { AddToCartButton } from '@/shared/ui/addToCartButton';
+import { useCart } from '@/feature/add-to-cart';
 
 type Product = components['schemas']['Product'];
 
 export const ProductCard = ({ product }: { product: Product }) => {
-  const { isAccessible } = product;
-
+  const { id, isAccessible } = product;
+  const { addToCart } = useCart();
   const badge = (
     <Badge
       variant={isAccessible ? 'success' : 'muted'}
@@ -20,7 +21,10 @@ export const ProductCard = ({ product }: { product: Product }) => {
   );
 
   const action = (
-    <AddToCartButton isAccessible={isAccessible} onClick={() => {}} />
+    <AddToCartButton
+      isAccessible={isAccessible}
+      onClick={() => addToCart(id)}
+    />
   );
 
   return (

@@ -8,16 +8,19 @@ import { ImagePlaceholder } from '@/shared/ui/image-placeholder';
 import { AdditionalInfo } from './additionInfo';
 import { Badge } from '@/shared/ui/badge';
 import { AddToCartButton } from '@/shared/ui/addToCartButton';
+import { useCart } from '@/feature/add-to-cart';
 
 export const ProductPage = () => {
-  const { id } = useParams();
+  const { id: productId } = useParams();
+  const { addToCart } = useCart();
+
   const {
     data: product,
     isLoading,
     isError,
   } = useQuery({
-    ...productApi.getProductQueryOptions(id ?? ''),
-    enabled: !!id,
+    ...productApi.getProductQueryOptions(productId ?? ''),
+    enabled: !!productId,
   });
 
   if (isLoading) return <Loader />;
@@ -31,7 +34,7 @@ export const ProductPage = () => {
     );
   }
 
-  const { name, description, price, isAccessible, image } = product;
+  const { id, name, description, price, isAccessible, image } = product;
 
   return (
     <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -71,7 +74,10 @@ export const ProductPage = () => {
             <div className='text-3xl font-bold text-gray-900 mb-4'>
               {price?.toLocaleString('ru-RU')} ₽
             </div>
-            <AddToCartButton isAccessible={isAccessible} onClick={() => {}} />
+            <AddToCartButton
+              isAccessible={isAccessible}
+              onClick={() => addToCart(id)}
+            />
           </div>
 
           <AdditionalInfo />
