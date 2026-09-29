@@ -3,6 +3,7 @@ interface EmptyStateProps {
   description?: string;
   onReset?: () => void;
   testId?: string;
+  classname?: string;
 }
 
 export const EmptyState = ({
@@ -10,10 +11,11 @@ export const EmptyState = ({
   description = 'Под выбранные фильтры не подошёл ни один товар. Измените условия или сбросьте фильтры.',
   onReset,
   testId,
+  classname,
 }: EmptyStateProps) => {
   return (
     <div
-      className='bg-white w-full rounded-xl shadow-sm border border-gray-100 p-12 text-center'
+      className={`bg-white w-full rounded-xl shadow-sm border border-gray-100 p-12 text-center flex flex-col gap-4 justify-center items-center ${classname ?? ''} `}
       data-testid={testId}
     >
       <h3 className='text-xl font-semibold text-gray-900 mb-2'>{title}</h3>

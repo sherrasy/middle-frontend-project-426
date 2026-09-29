@@ -4,7 +4,8 @@ interface ItemCardProps {
   productId: string | number;
   name: string;
   pricePerUnit: number;
-  imageUrl?: string;
+  imageUrl: string | null;
+  isAccessible: boolean;
 }
 
 export const ItemCard = ({
@@ -12,6 +13,7 @@ export const ItemCard = ({
   name,
   pricePerUnit,
   imageUrl,
+  isAccessible = true,
 }: ItemCardProps) => {
   const { getItemQuantity, updateQuantity, removeFromCart } = useCart();
 
@@ -30,6 +32,36 @@ export const ItemCard = ({
   const handleRemove = () => {
     removeFromCart(productId);
   };
+
+  if (!isAccessible) {
+    return (
+      <div className='bg-gray-50 border border-gray-300 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 opacity-60'>
+        <div className='w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shrink-0'>
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={name}
+              className='w-full h-full object-contain p-2 grayscale'
+            />
+          )}
+        </div>
+
+        <div className='flex-1 min-w-0'>
+          <h2 className='text-lg font-semibold text-gray-500'>{name}</h2>
+          <p className='text-sm text-red-500 mt-1 font-medium'>
+            Товар недоступен для заказа
+          </p>
+        </div>
+
+        <button
+          onClick={handleRemove}
+          className='shrink-0 text-red-500 hover:text-red-700 font-medium text-sm transition-colors'
+        >
+          Удалить
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className='bg-white border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4'>
@@ -66,7 +98,7 @@ export const ItemCard = ({
 
       <button
         onClick={handleRemove}
-        className='shrink-0 text-red-500 hover:text-red-700 font-medium text-sm transition-colors'
+        className='shrink-0 text-red-500 hover:text-red-700 font-medium text-sm transition-colors hover:cursor-pointer'
       >
         Удалить
       </button>

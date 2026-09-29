@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
-import { productApi } from '../api/productApi';
 import { Loader } from '@/shared/ui/loader';
 import { EmptyState } from '@/shared/ui/empty-placeholder';
 import { ROUTES } from '@/shared/constants/routes';
@@ -9,6 +8,7 @@ import { AdditionalInfo } from './additionInfo';
 import { Badge } from '@/shared/ui/badge';
 import { AddToCartButton } from '@/shared/ui/addToCartButton';
 import { useCart } from '@/feature/add-to-cart';
+import { productApi } from '@/entities/product';
 
 export const ProductPage = () => {
   const { id: productId } = useParams();
