@@ -1,3 +1,6 @@
+import { TEST_IDS } from '@/shared/constants/testids';
+import { formatPrice } from '@/shared/lib/formatters';
+
 interface CartTotalProps {
   amount: number;
   price: number;
@@ -16,8 +19,11 @@ export const CartTotal = ({ amount, price }: CartTotalProps) => {
 
           <div className='flex justify-between items-baseline'>
             <span className='text-gray-600'>К оплате</span>
-            <span className='text-xl font-bold text-gray-900'>
-              {price.toLocaleString('ru-RU')} ₽
+            <span
+              className='text-xl font-bold text-gray-900'
+              data-testid={TEST_IDS.cart.total}
+            >
+              {formatPrice(price)}
             </span>
           </div>
         </div>
@@ -29,6 +35,7 @@ export const CartTotal = ({ amount, price }: CartTotalProps) => {
               ? 'bg-blue-500 text-white hover:bg-blue-600'
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
+          data-testid={TEST_IDS.cart.checkout}
         >
           Оформить заказ
         </button>

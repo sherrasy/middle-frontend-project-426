@@ -41,6 +41,7 @@ export const Header = () => {
 
           <Link
             to={ROUTES.CART}
+            data-testid={TEST_IDS.nav.cart}
             className='text-base font-medium text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1'
           >
             Корзина

@@ -48,6 +48,8 @@ export const TEST_IDS = {
     itemQty: 'cart-item-qty',
     itemRemove: 'cart-item-remove',
     total: 'cart-total',
+    empty: 'cart-empty',
+    checkout: 'cart-checkout',
   },
   smoke: 'main-heading',
 } as const;

@@ -3,6 +3,7 @@ import { Loader } from '@/shared/ui/loader';
 import { useCartProducts } from '../model/useCartProducts';
 import { ItemCard } from './item-card';
 import { CartTotal } from './total';
+import { TEST_IDS } from '@/shared/constants/testids';
 
 export const CartPage = () => {
   const { cartItems, totalPrice, totalItems, isEmptyCart, isLoading } =
@@ -22,6 +23,7 @@ export const CartPage = () => {
             title='Корзина пуста'
             description='Перейдите в каталог чтобы добавить товары'
             classname='flex-1 max-w-250'
+            testId={TEST_IDS.cart.empty}
           />
         ) : (
           <div className='flex-1 flex flex-col gap-4'>

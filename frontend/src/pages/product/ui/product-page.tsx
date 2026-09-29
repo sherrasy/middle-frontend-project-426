@@ -9,6 +9,8 @@ import { Badge } from '@/shared/ui/badge';
 import { AddToCartButton } from '@/shared/ui/addToCartButton';
 import { useCart } from '@/feature/add-to-cart';
 import { productApi } from '@/entities/product';
+import { TEST_IDS } from '@/shared/constants/testids';
+import { formatPrice } from '@/shared/lib/formatters';
 
 export const ProductPage = () => {
   const { id: productId } = useParams();
@@ -60,7 +62,12 @@ export const ProductPage = () => {
         </div>
 
         <div>
-          <h1 className='text-3xl font-bold text-gray-900 mb-4'>{name}</h1>
+          <h1
+            className='text-3xl font-bold text-gray-900 mb-4'
+            data-testid={TEST_IDS.product.name}
+          >
+            {name}
+          </h1>
 
           <div className='mb-4'>
             <Badge variant={isAccessible ? 'success' : 'muted'}>
@@ -68,13 +75,22 @@ export const ProductPage = () => {
             </Badge>
           </div>
 
-          <p className='text-gray-700 mb-6'>{description}</p>
+          <p
+            className='text-gray-700 mb-6'
+            data-testid={TEST_IDS.product.description}
+          >
+            {description}
+          </p>
 
           <div className='bg-white border border-gray-200 rounded-lg p-6 mb-6'>
-            <div className='text-3xl font-bold text-gray-900 mb-4'>
-              {price?.toLocaleString('ru-RU')} ₽
+            <div
+              className='text-3xl font-bold text-gray-900 mb-4'
+              data-testid={TEST_IDS.product.price}
+            >
+              {formatPrice(price)}
             </div>
             <AddToCartButton
+              data-testid={TEST_IDS.product.addToCart}
               isAccessible={isAccessible}
               onClick={() => addToCart(id)}
             />

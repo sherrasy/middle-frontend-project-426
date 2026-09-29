@@ -3,13 +3,18 @@ import { ROUTES } from '@/shared/constants/routes';
 import { ReactNode } from 'react';
 import { ImagePlaceholder } from './image-placeholder';
 import { components } from '../types/api-schema';
+import { formatPrice } from '../lib/formatters';
 
 type Product = components['schemas']['Product'];
-
+export interface BaseCardTestIds {
+  root: string;
+  title?: string;
+  price?: string;
+}
 interface BaseCardProps {
   data: Product;
   title?: string;
-  testId: string;
+  testIds: BaseCardTestIds;
   badge?: ReactNode;
   action?: ReactNode;
 }
@@ -17,7 +22,7 @@ interface BaseCardProps {
 export const BaseCard = ({
   data,
   title,
-  testId,
+  testIds,
   badge,
   action,
 }: BaseCardProps) => {
@@ -32,7 +37,7 @@ export const BaseCard = ({
   return (
     <div
       className='bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full hover:cursor-pointer'
-      data-testid={testId}
+      data-testid={testIds.root}
       onClick={handleCardClick}
     >
       <div className='relative bg-linear-to-br from-blue-50 to-indigo-50 aspect-square overflow-hidden'>
@@ -48,7 +53,10 @@ export const BaseCard = ({
       </div>
 
       <div className='p-5 flex flex-col grow'>
-        <h3 className='font-semibold text-gray-900 text-lg mb-2 line-clamp-2'>
+        <h3
+          className='font-semibold text-gray-900 text-lg mb-2 line-clamp-2'
+          data-testid={testIds.title}
+        >
           {displayTitle}
         </h3>
 
@@ -57,8 +65,11 @@ export const BaseCard = ({
         </p>
 
         <div className='flex items-center justify-between mb-4'>
-          <span className='text-2xl font-bold text-gray-900'>
-            {data.price.toLocaleString('ru-RU')} ₽
+          <span
+            className='text-2xl font-bold text-gray-900'
+            data-testid={testIds.price}
+          >
+            {formatPrice(data.price)}
           </span>
           {badge}
         </div>

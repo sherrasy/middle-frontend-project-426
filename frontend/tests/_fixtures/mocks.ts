@@ -89,3 +89,26 @@ export const mockPromoBlocks = async (page: Page) => {
     });
   });
 };
+
+export const mockProductById = async (
+  page: Page,
+  productId: string | number,
+) => {
+  const product = PRODUCTS_FIXTURE.find((p) => p.id === Number(productId));
+
+  await page.route(`**/catalog/products/${productId}`, async (route) => {
+    if (product) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(product),
+      });
+    } else {
+      await route.fulfill({
+        status: 404,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'Not found' }),
+      });
+    }
+  });
+};
