@@ -14,7 +14,7 @@ export const PromoItemCard = ({ promoItem }: { promoItem: PromoItem }) => {
     <BaseCard
       data={product}
       title={title}
-      testId={TEST_IDS.home.item}
+      testIds={{ root: TEST_IDS.home.item }}
       badge={badge}
     />
   );
