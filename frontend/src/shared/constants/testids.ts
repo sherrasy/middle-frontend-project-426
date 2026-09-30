@@ -51,5 +51,24 @@ export const TEST_IDS = {
     empty: 'cart-empty',
     checkout: 'cart-checkout',
   },
+  checkout: {
+    form: 'checkout-form',
+    method: 'checkout-method',
+    name: 'checkout-name',
+    phone: 'checkout-phone',
+    address: 'checkout-address',
+    submit: 'checkout-submit',
+  },
+  order: {
+    success: 'order-success',
+    error: 'order-error',
+    total: 'order-total',
+    status: 'order-status',
+  },
+  account: {
+    orders: 'account-orders',
+    orderItem: 'account-order-item',
+    ordersEmpty: 'account-orders-empty',
+  },
   smoke: 'main-heading',
 } as const;
