@@ -123,6 +123,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Получить список всех заказов пользователя */
+        get: operations["OrdersApi_getMyOrders"];
+        put?: never;
+        /** @description Создать новый заказ. */
+        post: operations["OrdersApi_createOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Получить детализацию заказа */
+        get: operations["OrdersApi_getOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/promo": {
         parameters: {
             query?: never;
@@ -153,6 +188,21 @@ export interface components {
             token: string;
             /** @description Данные пользователя */
             user: components["schemas"]["User"];
+        };
+        /** @description Элементы корзины для создания заказа */
+        CartItemRequest: {
+            /**
+             * Format: int32
+             * @description ИД товара
+             * @example 1
+             */
+            productId: number;
+            /**
+             * Format: int32
+             * @description Количество товара
+             * @example 2
+             */
+            quantity: number;
         };
         /** @description Параметры фильтрации и пагинации */
         CatalogQuery: {
@@ -199,7 +249,7 @@ export interface components {
         Category: {
             /**
              * Format: int32
-             * @description Идентификатор
+             * @description ИД
              * @example 1
              */
             id: number;
@@ -209,6 +259,33 @@ export interface components {
              */
             name: string;
         };
+        /** @description Тело запроса на создание заказа */
+        CreateOrderRequest: {
+            /** @description Способ получения */
+            deliveryMethod: components["schemas"]["DeliveryMethod"];
+            /**
+             * @description Имя получателя
+             * @example Иван Иванов
+             */
+            recipientName: string;
+            /**
+             * @description Телефон получателя
+             * @example +79991234567
+             */
+            recipientPhone: string;
+            /**
+             * @description Адрес доставки
+             * @example г. Москва, ул. Примерная, д. 1
+             */
+            deliveryAddress?: string;
+            /** @description Состав корзины */
+            items: components["schemas"]["CartItemRequest"][];
+        };
+        /**
+         * @description Способ получения заказа
+         * @enum {string}
+         */
+        DeliveryMethod: "delivery" | "pickup";
         Error: {
             /**
              * Format: int32
@@ -242,11 +319,117 @@ export interface components {
          * @example 1500
          */
         Money: number;
+        /** @description Заказ */
+        Order: {
+            /**
+             * Format: int32
+             * @description ИД заказа
+             * @example 1001
+             */
+            id: number;
+            /**
+             * Format: date-time
+             * @description Дата и время создания заказа
+             * @example 2026-10-01T12:00:00Z
+             */
+            createdAt: string;
+            /** @description Статус заказа */
+            status: components["schemas"]["OrderStatus"];
+            /** @description Способ получения */
+            deliveryMethod: components["schemas"]["DeliveryMethod"];
+            /**
+             * @description Имя получателя
+             * @example Иван Петров
+             */
+            recipientName: string;
+            /**
+             * @description Телефон получателя
+             * @example +7 (999) 000-11-22
+             */
+            recipientPhone: string;
+            /**
+             * @description Адрес доставки
+             * @example ул. Ленина, д. 15, кв. 42
+             */
+            deliveryAddress?: string | null;
+            /** @description Позиции заказа */
+            items: components["schemas"]["OrderItem"][];
+            /**
+             * @description Итоговая сумма заказа
+             * @example 43980
+             */
+            totalAmount: components["schemas"]["Money"];
+        };
+        /** @description Ошибка создания заказа */
+        OrderCreationError: {
+            /** @description Список проблемных товаров */
+            problematicProducts: components["schemas"]["ProblematicProduct"][];
+        } & components["schemas"]["Error"];
+        /** @description Позиция заказа (снимок товара) */
+        OrderItem: {
+            /**
+             * Format: int32
+             * @description ИД товара
+             * @example 1
+             */
+            productId: number;
+            /**
+             * @description Название товара на момент покупки
+             * @example AMD Ryzen 5 7600X
+             */
+            productName: string;
+            /**
+             * Format: int32
+             * @description Количество единиц товара
+             * @example 2
+             */
+            quantity: number;
+            /**
+             * @description Цена за единицу товара
+             * @example 21990
+             */
+            price: components["schemas"]["Money"];
+            /**
+             * @description Сумма по данной позиции
+             * @example 43980
+             */
+            total: components["schemas"]["Money"];
+        };
+        /** @description Список заказов пользователя */
+        OrderList: {
+            /** @description Заказы пользователя */
+            items: components["schemas"]["Order"][];
+            /**
+             * Format: int32
+             * @description Общее количество заказов
+             * @example 5
+             */
+            total: number;
+        };
+        /**
+         * @description Статус заказа
+         * @enum {string}
+         */
+        OrderStatus: "paid";
+        /** @description Проблемный товар, из-за которого невозможно создать заказ */
+        ProblematicProduct: {
+            /**
+             * Format: int32
+             * @description ИД товара
+             * @example 1
+             */
+            productId: number;
+            /**
+             * @description Причина проблемы
+             * @example Товар недоступен для покупки
+             */
+            reason: string;
+        };
         /** @description Товар */
         Product: {
             /**
              * Format: int32
-             * @description Идентификатор
+             * @description ИД
              * @example 1
              */
             id: number;
@@ -277,7 +460,7 @@ export interface components {
             isAccessible: boolean;
             /**
              * Format: int32
-             * @description Идентификатор категории
+             * @description ИД категории
              * @example 1
              */
             categoryId: number;
@@ -315,7 +498,7 @@ export interface components {
         PromoBlock: {
             /**
              * Format: int32
-             * @description Идентификатор промо-блока
+             * @description ИД промо-блока
              * @example 1
              */
             id: number;
@@ -350,7 +533,7 @@ export interface components {
         User: {
             /**
              * Format: int32
-             * @description Идентификатор
+             * @description ИД
              * @example 42
              */
             id: number;
@@ -593,6 +776,100 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"] | components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    OrdersApi_getMyOrders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderList"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    OrdersApi_createOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded and a new resource has been created as a result. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Order"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"] | components["schemas"]["OrderCreationError"] | components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    OrdersApi_getOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ИД заказа */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Order"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

@@ -39,7 +39,7 @@ model ValidationDetail {
 
 @doc("Пользователь (покупатель)")
 model User {
-  @doc("Идентификатор")
+  @doc("ИД")
   @example(42)
   id: int32;
 
@@ -94,7 +94,7 @@ model LogoutResponse {
 
 @doc("Категория товара")
 model Category {
-  @doc("Идентификатор")
+  @doc("ИД")
   @example(1)
   id: int32;
 
@@ -105,7 +105,7 @@ model Category {
 
 @doc("Товар")
 model Product {
-  @doc("Идентификатор")
+  @doc("ИД")
   @example(1)
   id: int32;
 
@@ -129,7 +129,7 @@ model Product {
   @example(true)
   isAccessible: boolean;
 
-  @doc("Идентификатор категории")
+  @doc("ИД категории")
   @example(1)
   categoryId: int32;
 }
@@ -158,7 +158,7 @@ model ProductList {
 
 @doc("Промо-блок")
 model PromoBlock {
-  @doc("Идентификатор промо-блока")
+  @doc("ИД промо-блока")
   @example(1)
   id: int32;
 
@@ -206,6 +206,146 @@ model CatalogQuery {
   @maxValue(100)
   @example(12)
   pageSize?: int32;
+}
+
+@doc("Способ получения заказа")
+enum DeliveryMethod {
+  @doc("Курьерская доставка")
+  Delivery: "delivery",
+
+  @doc("Самовывоз из пункта выдачи")
+  Pickup: "pickup",
+}
+
+@doc("Статус заказа")
+enum OrderStatus {
+  @doc("Заказ успешно оформлен и оплачен")
+  Paid: "paid",
+}
+
+@doc("Позиция заказа (снимок товара)")
+model OrderItem {
+  @doc("ИД товара")
+  @example(1)
+  productId: int32;
+
+  @doc("Название товара на момент покупки")
+  @example("AMD Ryzen 5 7600X")
+  productName: string;
+
+  @doc("Количество единиц товара")
+  @minValue(1)
+  @example(2)
+  quantity: int32;
+
+  @doc("Цена за единицу товара")
+  @example(21990)
+  price: Money;
+
+  @doc("Сумма по данной позиции")
+  @example(43980)
+  total: Money;
+}
+
+@doc("Заказ")
+model Order {
+  @doc("ИД заказа")
+  @example(1001)
+  id: int32;
+
+  @doc("Дата и время создания заказа")
+  @format("date-time")
+  @example("2026-10-01T12:00:00Z")
+  createdAt: string;
+
+  @doc("Статус заказа")
+  status: OrderStatus;
+
+  @doc("Способ получения")
+  deliveryMethod: DeliveryMethod;
+
+  @doc("Имя получателя")
+  @example("Иван Петров")
+  recipientName: string;
+
+  @doc("Телефон получателя")
+  @example("+7 (999) 000-11-22")
+  recipientPhone: string;
+
+  @doc("Адрес доставки")
+  @example("ул. Ленина, д. 15, кв. 42")
+  deliveryAddress?: string | null;
+
+  @doc("Позиции заказа")
+  items: OrderItem[];
+
+  @doc("Итоговая сумма заказа")
+  @example(43980)
+  totalAmount: Money;
+}
+
+@doc("Элементы корзины для создания заказа")
+model CartItemRequest {
+  @doc("ИД товара")
+  @example(1)
+  productId: int32;
+
+  @doc("Количество товара")
+  @minValue(1)
+  @example(2)
+  quantity: int32;
+}
+
+@doc("Тело запроса на создание заказа")
+model CreateOrderRequest {
+  @doc("Способ получения")
+  deliveryMethod: DeliveryMethod;
+
+  @doc("Имя получателя")
+  @minLength(1)
+  @example("Иван Иванов")
+  recipientName: string;
+
+  @doc("Телефон получателя")
+  @minLength(5)
+  @example("+79991234567")
+  recipientPhone: string;
+
+  @doc("Адрес доставки ")
+  @example("г. Москва, ул. Примерная, д. 1")
+  deliveryAddress?: string;
+
+  @doc("Состав корзины")
+  @minItems(1)
+  items: CartItemRequest[];
+}
+
+@doc("Проблемный товар, из-за которого невозможно создать заказ")
+model ProblematicProduct {
+  @doc("ИД товара")
+  @example(1)
+  productId: int32;
+
+  @doc("Причина проблемы")
+  @example("Товар недоступен для покупки")
+  reason: string;
+}
+
+@error
+@doc("Ошибка создания заказа")
+model OrderCreationError extends Error {
+  @doc("Список проблемных товаров")
+  problematicProducts: ProblematicProduct[];
+}
+
+@doc("Список заказов пользователя")
+model OrderList {
+  @doc("Заказы пользователя")
+  items: Order[];
+
+  @doc("Общее количество заказов")
+  @example(5)
+  total: int32;
 }
 
 // API
@@ -261,4 +401,43 @@ interface PromoApi {
   @get
   @doc("Получить список промо-блоков для главной страницы")
   getPromoBlocks(): PromoBlock[] | Error;
+}
+
+@route("/orders")
+@tag("Orders")
+interface OrdersApi {
+  @post
+  @doc("Создать новый заказ.")
+  createOrder(@body body: CreateOrderRequest):
+    | {
+        @statusCode code: 201;
+        @body order: Order;
+      }
+    | ValidationError
+    | OrderCreationError
+    | Error;
+
+  @get
+  @doc("Получить список всех заказов пользователя")
+  getMyOrders():
+    | {
+        @statusCode code: 200;
+        @body orders: OrderList;
+      }
+    | Error;
+
+  @get
+  @route("/{id}")
+  @doc("Получить детализацию заказа")
+  getOrder(
+    @path
+    @doc("ИД заказа")
+    @example(1)
+    id: int32,
+  ):
+    | {
+        @statusCode code: 200;
+        @body order: Order;
+      }
+    | Error;
 }
