@@ -149,6 +149,34 @@ paths:
                   - $ref: '#/components/schemas/Error'
       tags:
         - Catalog
+  /catalog/products/{id}:
+    get:
+      operationId: CatalogApi_getProduct
+      description: Получить один товар
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error'
+      tags:
+        - Catalog
   /promo:
     get:
       operationId: PromoApi_getPromoBlocks

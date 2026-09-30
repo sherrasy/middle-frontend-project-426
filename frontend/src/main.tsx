@@ -7,15 +7,18 @@ import { initSentry } from './shared/config/initSentry';
 import { AuthProvider } from './entities/auth';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/config/queryClient';
+import { CartProvider } from './feature/add-to-cart';
 
 initSentry();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <CartProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </CartProvider>
     </AuthProvider>
   </StrictMode>,
 );

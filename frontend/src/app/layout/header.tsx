@@ -2,10 +2,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { TEST_IDS } from '@/shared/constants/testids';
 import { ROUTES } from '@/shared/constants/routes';
 import { useAuth } from '@/entities/auth';
+import { useCart } from '@/feature/add-to-cart';
 
 export const Header = () => {
   const { isAuthenticated, logout } = useAuth();
+  const { getTotalItems } = useCart();
   const navigate = useNavigate();
+  const totalItems = getTotalItems();
 
   const handleLogout = async () => {
     await logout();
@@ -38,11 +41,12 @@ export const Header = () => {
 
           <Link
             to={ROUTES.CART}
+            data-testid={TEST_IDS.nav.cart}
             className='text-base font-medium text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1'
           >
             Корзина
             <span className='bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center'>
-              2
+              {totalItems}
             </span>
           </Link>
 

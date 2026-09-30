@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { ROUTES } from '@/shared/constants/routes';
 import {
   mockCategories,
+  mockProductById,
   mockProducts,
   mockPromoBlocks,
 } from './_fixtures/mocks';
@@ -32,12 +33,14 @@ test.describe('Home promo Flow', () => {
   // 2. Клик по промо-блоку открывает страницу его товара.
   test('should redirect to product page', async ({ page }) => {
     const firstPromoItem = page.getByTestId(TEST_IDS.home.item).first();
-
     await firstPromoItem.click();
 
     await expect(page).toHaveURL(/\/catalog\/1$/);
+    await mockProductById(page, 1);
 
-    await expect(page.getByText('Product 1')).toBeVisible();
+    const itemName = page.getByTestId(TEST_IDS.product.name);
+
+    await expect(itemName).toBeVisible();
   });
   // 3. Из главной открывается каталог по ссылке в шапке.
   test(' should load catalog', async ({ page }) => {
