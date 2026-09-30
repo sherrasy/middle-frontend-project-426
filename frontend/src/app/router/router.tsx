@@ -9,6 +9,7 @@ import { CabinetPage } from '@/pages/cabinet';
 import { CatalogPage } from '@/pages/catalog';
 import { ProductPage } from '@/pages/product';
 import { CartPage } from '@/pages/cart';
+import { CheckoutPage } from '@/pages/checkout';
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,14 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.CART,
         element: <CartPage />,
+      },
+      {
+        path: ROUTES.CHECKOUT,
+        element: (
+          <RequireAuth>
+            <CheckoutPage />
+          </RequireAuth>
+        ),
       },
       {
         path: ROUTES.CABINET,
