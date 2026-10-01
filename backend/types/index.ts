@@ -10,7 +10,7 @@ export type DrizzleDB = ReturnType<typeof drizzle<typeof schemas>>;
 // Products
 export type Product = typeof schemas.products.$inferSelect;
 export type ProductInsert = typeof schemas.products.$inferInsert;
-export type PromoBlockType = Static<typeof PromoBlock>;
+export type PromoBlockT = Static<typeof PromoBlock>;
 // Users
 export type User = typeof schemas.users.$inferSelect;
 export type UserInsert = typeof schemas.users.$inferInsert;

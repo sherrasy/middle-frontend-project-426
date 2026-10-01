@@ -6,10 +6,10 @@ import { sendApiError } from '../lib/helpers/send-api-error.js';
 import { API_MESSAGES } from '../lib/messages.js';
 import { components } from '../types/api-schema.js';
 import type {
-  CatalogQueryType,
-  CategoryType,
-  ProductListType,
-  ProductType,
+  CatalogQueryT,
+  CategoryT,
+  ProductListT,
+  ProductT,
 } from '../types/catalog.js';
 import { ErrorData, ValidationErrorData } from '../types/common.js';
 import { getProductConditions } from '../lib/helpers/get-product-conditions.js';
@@ -17,7 +17,7 @@ import { Type as T } from '@sinclair/typebox';
 
 export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get<{
-    Reply: CategoryType[] | ErrorData;
+    Reply: CategoryT[] | ErrorData;
   }>('/categories', {
     schema: {
       response: {
@@ -32,7 +32,7 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
           .from(categories)
           .orderBy(categories.name);
 
-        return reply.code(200).send(result satisfies CategoryType[]);
+        return reply.code(200).send(result satisfies CategoryT[]);
       } catch (error) {
         return sendApiError(reply, 500, API_MESSAGES.common.internalError);
       }
@@ -41,7 +41,7 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
 
   fastify.get<{
     Params: { id: number };
-    Reply: ProductType | ValidationErrorData | ErrorData;
+    Reply: ProductT | ValidationErrorData | ErrorData;
   }>('/products/:id', {
     schema: {
       params: T.Object({
@@ -70,7 +70,7 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
           return sendApiError(reply, 404, API_MESSAGES.common.notFound);
         }
 
-        return reply.code(200).send(product satisfies ProductType);
+        return reply.code(200).send(product satisfies ProductT);
       } catch (error) {
         return sendApiError(reply, 500, API_MESSAGES.common.internalError);
       }
@@ -78,8 +78,8 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   fastify.get<{
-    Querystring: CatalogQueryType;
-    Reply: ProductListType | ValidationErrorData | ErrorData;
+    Querystring: CatalogQueryT;
+    Reply: ProductListT | ValidationErrorData | ErrorData;
   }>('/products', {
     schema: {
       querystring: components.schemas.CatalogQuery,
@@ -113,7 +113,7 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
           .limit(pageSize)
           .offset((page - 1) * pageSize);
 
-        const responseData: ProductListType = {
+        const responseData: ProductListT = {
           items,
           total,
           page,
@@ -121,7 +121,7 @@ export const catalogRoutes: FastifyPluginAsync = async (fastify) => {
           totalPages,
         };
 
-        return reply.code(200).send(responseData satisfies ProductListType);
+        return reply.code(200).send(responseData satisfies ProductListT);
       } catch (error) {
         return sendApiError(reply, 500, API_MESSAGES.common.internalError);
       }

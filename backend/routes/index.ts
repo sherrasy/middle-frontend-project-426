@@ -4,6 +4,7 @@ import { testError } from './test-error.js';
 import { authRoutes } from './auth.js';
 import { catalogRoutes } from './catalog.js';
 import { promoRoutes } from './promo.js';
+import { orderRoutes } from './orders.js';
 
 export const registerRoutes = async (app: FastifyInstance) => {
   await app.register(healthCheck, { prefix: '/api' });
@@ -11,4 +12,5 @@ export const registerRoutes = async (app: FastifyInstance) => {
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(catalogRoutes, { prefix: '/api/catalog' });
   await app.register(promoRoutes, { prefix: '/api' });
+  await app.register(orderRoutes, { prefix: '/api/orders' });
 };
