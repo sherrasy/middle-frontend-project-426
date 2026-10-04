@@ -69,6 +69,10 @@ export const TEST_IDS = {
     orders: 'account-orders',
     orderItem: 'account-order-item',
     ordersEmpty: 'account-orders-empty',
+    orderLine: 'account-order-line',
+    orderLineQty: 'account-order-line-qty',
+    orderLinePrice: 'account-order-line-price',
+    orderToggle: 'account-order-toggle',
   },
   smoke: 'main-heading',
 } as const;

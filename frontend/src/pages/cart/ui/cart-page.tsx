@@ -1,9 +1,9 @@
 import { EmptyState } from '@/shared/ui/empty-placeholder';
 import { Loader } from '@/shared/ui/loader';
-import { useCartProducts } from '../model/useCartProducts';
 import { ItemCard } from './item-card';
 import { CartTotal } from './total';
 import { TEST_IDS } from '@/shared/constants/testids';
+import { useCartProducts } from '@/feature/add-to-cart/model/useCartProducts';
 
 export const CartPage = () => {
   const { cartItems, totalPrice, totalItems, isEmptyCart, isLoading } =

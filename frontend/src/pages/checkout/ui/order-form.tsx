@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, Form as FormikForm } from 'formik';
 import {
   DELIVERY_METHODS,
   FIELD_LIMITS,
@@ -6,13 +6,13 @@ import {
   UI_MESSAGES,
 } from '../lib/consts';
 import { TEST_IDS } from '@/shared/constants/testids';
-import { Form } from 'react-router-dom';
 import { FormField } from './form-field';
 import { CheckoutFormValues, checkoutSchema } from '../model/checkout.schema';
 
 interface CheckoutFormProps {
   onSubmit: (values: CheckoutFormValues) => Promise<void>;
   serverError: string | null;
+  isSubmitting: boolean;
 }
 
 const initialValues: CheckoutFormValues = {
@@ -22,65 +22,72 @@ const initialValues: CheckoutFormValues = {
   address: '',
 };
 
-export const CheckoutForm = ({ onSubmit, serverError }: CheckoutFormProps) => {
+export const CheckoutForm = ({
+  onSubmit,
+  serverError,
+  isSubmitting,
+}: CheckoutFormProps) => {
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={checkoutSchema}
-      onSubmit={async (values, { setSubmitting }) => {
-        await onSubmit(values);
-        setSubmitting(false);
-      }}
+      onSubmit={onSubmit}
     >
-      {({ values, isSubmitting }) => (
-        <Form
+      {({ values }) => (
+        <FormikForm
           data-testid={TEST_IDS.checkout.form}
-          className='bg-white rounded-xl border border-gray-200 p-6 space-y-5'
+          className='bg-white rounded-xl border border-gray-200 p-6 space-y-5 lg:col-span-3'
         >
-          <h2 className='text-lg font-semibold text-gray-900'>Получение</h2>
+          <h2 className='text-base font-semibold text-gray-900'>Получение</h2>
 
-          <FormField
-            name='deliveryMethod'
-            label='Способ получения'
-            type='select'
-          >
-            <option value={DELIVERY_METHODS.DELIVERY}>
-              {UI_MESSAGES.delivery.delivery}
-            </option>
-            <option value={DELIVERY_METHODS.PICKUP}>
-              {UI_MESSAGES.delivery.pickup}
-            </option>
-          </FormField>
-
-          <FormField
-            name='recipientName'
-            label='Имя получателя'
-            placeholder={PLACEHOLDERS.recipientName}
-            maxLength={FIELD_LIMITS.recipientName.maxLength}
-            dataTestId={TEST_IDS.checkout.name}
-          />
-
-          <FormField
-            name='phone'
-            label='Телефон'
-            type='tel'
-            placeholder={PLACEHOLDERS.phone}
-            maxLength={FIELD_LIMITS.phone.maxLength}
-            dataTestId={TEST_IDS.checkout.phone}
-          />
-
-          {values.deliveryMethod === DELIVERY_METHODS.DELIVERY && (
+          <div className='space-y-5'>
             <FormField
-              name='address'
-              label='Адрес доставки'
-              placeholder={PLACEHOLDERS.address}
-              maxLength={FIELD_LIMITS.address.maxLength}
-              dataTestId={TEST_IDS.checkout.address}
+              name='deliveryMethod'
+              label='Способ получения'
+              type='select'
+              dataTestId={TEST_IDS.checkout.method}
+            >
+              <option value={DELIVERY_METHODS.DELIVERY}>
+                {UI_MESSAGES.delivery.delivery}
+              </option>
+              <option value={DELIVERY_METHODS.PICKUP}>
+                {UI_MESSAGES.delivery.pickup}
+              </option>
+            </FormField>
+
+            <FormField
+              name='recipientName'
+              label='Имя получателя'
+              placeholder={PLACEHOLDERS.recipientName}
+              maxLength={FIELD_LIMITS.recipientName.maxLength}
+              dataTestId={TEST_IDS.checkout.name}
             />
-          )}
+
+            <FormField
+              name='phone'
+              label='Телефон'
+              type='tel'
+              placeholder={PLACEHOLDERS.phone}
+              maxLength={FIELD_LIMITS.phone.maxLength}
+              dataTestId={TEST_IDS.checkout.phone}
+            />
+
+            {values.deliveryMethod === DELIVERY_METHODS.DELIVERY && (
+              <FormField
+                name='address'
+                label='Адрес доставки'
+                placeholder={PLACEHOLDERS.address}
+                maxLength={FIELD_LIMITS.address.maxLength}
+                dataTestId={TEST_IDS.checkout.address}
+              />
+            )}
+          </div>
 
           {serverError && (
-            <div className='text-red-600 text-sm bg-red-50 p-3 rounded-lg'>
+            <div
+              className='text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200'
+              data-testid={TEST_IDS.order.error}
+            >
               {serverError}
             </div>
           )}
@@ -93,7 +100,7 @@ export const CheckoutForm = ({ onSubmit, serverError }: CheckoutFormProps) => {
           >
             {isSubmitting ? 'Оформление…' : 'Оформить заказ'}
           </button>
-        </Form>
+        </FormikForm>
       )}
     </Formik>
   );

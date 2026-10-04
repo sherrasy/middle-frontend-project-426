@@ -1,7 +1,13 @@
 @import './normalize';
-@import "tailwindcss";
+@import 'tailwindcss';
 @import 'material-symbols/outlined.css';
 
 @theme {
-  --font-sans: "Inter", sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --color-blue-200: #b3c1fb;
+  --color-blue-300: #8da2f9;
+  --color-blue-500: #4f6ef7;
+  --color-blue-600: #3b5de7;
+  --color-blue-700: #2c4bd4;
+  --color-blue-800: #1f37a8;
 }

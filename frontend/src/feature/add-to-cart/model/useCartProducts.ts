@@ -1,7 +1,7 @@
-import { useCart } from '@/feature/add-to-cart';
 import { useQueries } from '@tanstack/react-query';
 import { productApi } from '@/entities/product/api/productApi';
 import { components } from '@/shared/types/api-schema';
+import { useCart } from './useCart';
 
 export interface CartItem {
   productId: string;

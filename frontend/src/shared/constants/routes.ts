@@ -7,5 +7,6 @@ export const ROUTES = {
   CART: '/cart',
   CABINET: '/cabinet',
   CHECKOUT: '/checkout',
+  SUCCESS: '/checkout-success',
   NOT_FOUND: '*',
 } as const;

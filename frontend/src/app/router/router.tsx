@@ -10,6 +10,7 @@ import { CatalogPage } from '@/pages/catalog';
 import { ProductPage } from '@/pages/product';
 import { CartPage } from '@/pages/cart';
 import { CheckoutPage } from '@/pages/checkout';
+import { OrderSuccessPage } from '@/pages/order-success';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <CheckoutPage />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: ROUTES.SUCCESS,
+        element: (
+          <RequireAuth>
+            <OrderSuccessPage />
           </RequireAuth>
         ),
       },
