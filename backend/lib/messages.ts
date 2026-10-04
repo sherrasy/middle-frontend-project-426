@@ -18,5 +18,6 @@ export const API_MESSAGES = {
     creationFailed: 'Невозможно создать заказ из-за проблем с товарами',
     productNotAccessible: 'Товар временно недоступен для покупки',
     productNotFound: 'Товар не найден',
+    invalidAddress: 'Адрес доставки обязателен при выборе курьерской доставки',
   },
 } as const;

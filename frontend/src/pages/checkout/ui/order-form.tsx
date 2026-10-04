@@ -10,7 +10,7 @@ import { FormField } from './form-field';
 import { CheckoutFormValues, checkoutSchema } from '../model/checkout.schema';
 
 interface CheckoutFormProps {
-  onSubmit: (values: CheckoutFormValues) => Promise<void>;
+  onSubmit: (values: CheckoutFormValues) => void;
   serverError: string | null;
   isSubmitting: boolean;
 }

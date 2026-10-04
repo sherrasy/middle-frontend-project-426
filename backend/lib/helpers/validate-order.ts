@@ -27,7 +27,7 @@ export const validateOrder = async (cartItems: CartItem[]) => {
     if (!product) {
       problematicProducts.push({
         productId: item.productId,
-        reason: API_MESSAGES.order.productNotFound,
+        reason: `${API_MESSAGES.order.productNotFound} - ИД ${item.productId}`,
       });
       continue;
     }
@@ -35,7 +35,7 @@ export const validateOrder = async (cartItems: CartItem[]) => {
     if (!product.isAccessible) {
       problematicProducts.push({
         productId: item.productId,
-        reason: API_MESSAGES.order.productNotAccessible,
+        reason: `${API_MESSAGES.order.productNotAccessible} - ИД ${item.productId} "${product.name}"`,
       });
       continue;
     }

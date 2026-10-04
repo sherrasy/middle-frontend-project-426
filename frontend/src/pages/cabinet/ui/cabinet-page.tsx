@@ -6,6 +6,7 @@ import { TEST_IDS } from '@/shared/constants/testids';
 import { Loader } from '@/shared/ui/loader';
 import { useQuery } from '@tanstack/react-query';
 import { ordersApi } from '../api/ordersApi';
+import { EmptyState } from '@/shared/ui/empty-placeholder';
 
 export const CabinetPage = () => {
   const { user } = useAuth();
@@ -43,12 +44,11 @@ export const CabinetPage = () => {
         data-testid={TEST_IDS.account.orders}
       >
         {orders.length === 0 ? (
-          <div
-            className='text-center py-12 text-gray-400 bg-gray-50 rounded-xl border border-dashed border-gray-300'
-            data-testid={TEST_IDS.account.ordersEmpty}
-          >
-            Заказов пока нет
-          </div>
+          <EmptyState
+            title='Заказов пока нет'
+            description='Перейдите в каталог и сделайте первый заказ'
+            testId={TEST_IDS.account.ordersEmpty}
+          />
         ) : (
           orders.map((order) => <OrderItem key={order.id} order={order} />)
         )}

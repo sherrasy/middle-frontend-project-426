@@ -38,7 +38,7 @@ export const FormField = (props: FormFieldCombinedProps) => {
         <select
           {...field}
           data-testid={props.dataTestId}
-          className={`${baseClasses} ${errorClasses} bg-white appearance-none cursor-pointer`}
+          className={`${baseClasses} ${errorClasses} bg-white cursor-pointer`}
         >
           {props.children}
         </select>

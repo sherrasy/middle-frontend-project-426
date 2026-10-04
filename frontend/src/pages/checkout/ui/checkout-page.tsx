@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckoutFormValues } from '../model/checkout.schema';
 import { CheckoutForm } from './order-form';
@@ -7,15 +7,14 @@ import { Loader } from '@/shared/ui/loader';
 import { OrderSummary } from './order-summary';
 import { useCart } from '@/feature/add-to-cart';
 import { useCartProducts } from '@/feature/add-to-cart/model/useCartProducts';
-import { CreateOrderError, useCreateOrder } from '../model/createOrderMutation';
+import { useCreateOrder } from '../model/createOrderMutation';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
   const { cart, isEmpty } = useCart();
   const { cartItems, totalPrice, isLoading } = useCartProducts();
 
-  const { mutate, isPending, isSuccess } = useCreateOrder();
-  const [serverError, setServerError] = useState<string | null>(null);
+  const { mutate, isPending, isSuccess, errorMessage } = useCreateOrder();
 
   useEffect(() => {
     if (!isLoading && isEmpty() && !isSuccess) {
@@ -23,9 +22,7 @@ export const CheckoutPage = () => {
     }
   }, [isEmpty, isLoading, isSuccess, navigate]);
 
-  const handleSubmit = async (values: CheckoutFormValues) => {
-    setServerError(null);
-
+  const handleSubmit = (values: CheckoutFormValues) => {
     const payload = {
       items: Object.entries(cart).map(([productId, quantity]) => ({
         productId: Number(productId),
@@ -38,21 +35,7 @@ export const CheckoutPage = () => {
         values.deliveryMethod === 'delivery' ? values.address : undefined,
     };
 
-    mutate(payload, {
-      onError: (error: CreateOrderError) => {
-        if ('problematicProducts' in error) {
-          const problems = error.problematicProducts
-            .map((p) => `Товар ID ${p.productId}: ${p.reason}`)
-            .join('; ');
-          setServerError(`Не удалось оформить заказ: ${problems}`);
-        } else {
-          setServerError(
-            error.message ||
-              'Не удалось оформить заказ. Проверьте данные или наличие товаров.',
-          );
-        }
-      },
-    });
+    mutate(payload);
   };
 
   if (isLoading) {
@@ -72,7 +55,7 @@ export const CheckoutPage = () => {
       <div className='grid grid-cols-1 lg:grid-cols-5 gap-6'>
         <CheckoutForm
           onSubmit={handleSubmit}
-          serverError={serverError}
+          serverError={errorMessage}
           isSubmitting={isPending}
         />
 

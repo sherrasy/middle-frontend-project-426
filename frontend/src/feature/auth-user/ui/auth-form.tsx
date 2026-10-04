@@ -124,7 +124,7 @@ export const AuthForm = ({
         {config.linkText}
         <Link
           to={config.linkTo}
-          className='text-blue-500 hover:text-blue-600 font-medium'
+          className='text-blue-500 hover:text-blue-600 font-medium pl-1'
         >
           {config.linkLabel}
         </Link>

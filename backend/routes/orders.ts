@@ -27,8 +27,8 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
       response: {
         201: components.schemas.Order,
         400: T.Union([
-          components.schemas.ValidationError,
           components.schemas.OrderCreationError,
+          components.schemas.ValidationError,
         ]),
         401: components.schemas.Error,
         500: components.schemas.Error,
@@ -46,6 +46,14 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
         recipientPhone,
         deliveryAddress,
       } = request.body;
+
+      if (!items || items.length === 0) {
+        return sendApiError(reply, 400, 'Корзина пуста');
+      }
+
+      if (deliveryMethod === 'delivery' && !deliveryAddress?.trim()) {
+        return sendApiError(reply, 400, API_MESSAGES.order.invalidAddress);
+      }
 
       const { problematicProducts, snapshots, totalAmount } =
         await validateOrder(items);
@@ -69,7 +77,7 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
             recipientName,
             recipientPhone,
             deliveryAddress:
-              deliveryMethod === 'delivery' ? deliveryAddress || null : null,
+              deliveryMethod === 'delivery' ? (deliveryAddress ?? null) : null,
             totalAmount,
           })
           .returning();
@@ -84,15 +92,10 @@ export const orderRoutes: FastifyPluginAsync = async (fastify) => {
         return [newOrder];
       });
 
-      const createdItems = await db
-        .select()
-        .from(orderItems)
-        .where(eq(orderItems.orderId, createdOrder.id));
-
       return reply.code(201).send({
         ...createdOrder,
         createdAt: createdOrder.createdAt.toISOString(),
-        items: createdItems,
+        items: snapshots,
       } satisfies OrderT);
     },
   });

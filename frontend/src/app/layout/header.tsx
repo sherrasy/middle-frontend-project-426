@@ -6,12 +6,13 @@ import { useCart } from '@/feature/add-to-cart';
 
 export const Header = () => {
   const { isAuthenticated, logout } = useAuth();
-  const { getTotalItems } = useCart();
+  const { getTotalItems, clearCart } = useCart();
   const navigate = useNavigate();
   const totalItems = getTotalItems();
 
   const handleLogout = async () => {
     await logout();
+    clearCart();
     navigate(ROUTES.SIGNIN);
   };
 
