@@ -18,7 +18,7 @@ export const Header = () => {
 
   return (
     <header className='bg-white shadow-sm border-b border-gray-200'>
-      <div className='max-w-6xl mx-auto px-4 py-4 flex items-baseline gap-2 md:justify-between'>
+      <div className='max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-baseline gap-2 md:justify-between '>
         <div className='flex items-center gap-2'>
           <div className='w-3 h-3 bg-blue-500 rounded-sm'></div>
           <Link to={ROUTES.MAIN}>
