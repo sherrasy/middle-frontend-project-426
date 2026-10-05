@@ -8,7 +8,8 @@ export const MainLayout = () => (
     <div className='absolute top-4 right-4'>
       <ErrorButton />
     </div>
-    <main className={` px-4 py-8 flex flex-col items-center gap-6`}>
+    <main className='max-w-7xl mx-auto px-4 py-8 flex flex-col items-center gap-6'>
+      {' '}
       <Outlet />
     </main>
   </div>

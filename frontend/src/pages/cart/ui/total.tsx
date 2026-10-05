@@ -11,7 +11,8 @@ export const CartTotal = ({ amount, price }: CartTotalProps) => {
   const navigate = useNavigate();
   const handleCheckoutRedirect = () => navigate(ROUTES.CHECKOUT);
   return (
-    <div className='w-full lg:w-80 shrink-0 '>
+    <div className='w-full lg:w-80 shrink-0 max-w-full'>
+      {' '}
       <div className='bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-2'>
         <h2 className='text-xl font-bold text-gray-900 mb-2'>Итог</h2>
 
