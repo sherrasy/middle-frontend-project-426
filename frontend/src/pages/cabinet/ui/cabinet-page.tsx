@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { TEST_IDS } from '@/shared/constants/testids';
 import { Loader } from '@/shared/ui/loader';
 import { useQuery } from '@tanstack/react-query';
-import { ordersApi } from '../api/ordersApi';
 import { EmptyState } from '@/shared/ui/empty-placeholder';
 import { useState } from 'react';
+import { ordersApi } from '@/entities/order/api/ordersApi';
 
 export const CabinetPage = () => {
   const { user } = useAuth();

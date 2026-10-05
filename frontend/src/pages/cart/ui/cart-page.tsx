@@ -16,7 +16,7 @@ export const CartPage = () => {
   }
 
   return (
-    <div className='px-4 py-8 mx-auto w-svw max-w-6xl relative'>
+    <div className='px-4 py-8 mx-auto w-full max-w-6xl relative'>
       <h1 className='text-3xl font-bold text-gray-900 mb-6'>Корзина</h1>
       {!isEmptyCart && (
         <button

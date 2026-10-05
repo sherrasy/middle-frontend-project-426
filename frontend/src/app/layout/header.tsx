@@ -18,20 +18,20 @@ export const Header = () => {
 
   return (
     <header className='bg-white shadow-sm border-b border-gray-200'>
-      <div className='max-w-6xl mx-auto px-4 py-4 flex items-center justify-between'>
+      <div className='max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-baseline gap-2 md:justify-between '>
         <div className='flex items-center gap-2'>
           <div className='w-3 h-3 bg-blue-500 rounded-sm'></div>
           <Link to={ROUTES.MAIN}>
-            <h1
-              className='text-xl font-bold text-gray-900'
+            <span
+              className='font-bold text-gray-900 text-lg md:text-2xl'
               data-testid={TEST_IDS.smoke}
             >
               Комплектующие
-            </h1>{' '}
+            </span>
           </Link>
         </div>
 
-        <nav className='flex items-center gap-6'>
+        <nav className='flex items-center gap-2 md:gap-6'>
           <Link
             to={ROUTES.CATALOG}
             data-testid={TEST_IDS.nav.catalog}

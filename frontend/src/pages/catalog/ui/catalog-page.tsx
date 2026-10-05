@@ -53,7 +53,7 @@ export const CatalogPage = () => {
           ) : (
             <>
               <div
-                className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'
+                className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6'
                 data-testid={TEST_IDS.catalog.list}
               >
                 {data?.items.map((product) => (

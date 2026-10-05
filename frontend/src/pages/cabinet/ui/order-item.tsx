@@ -90,24 +90,23 @@ export const OrderItem = ({
                 </div>
               ))}
             </div>
-
-            <div className='border-t border-gray-200 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
-              <div className='text-sm text-gray-500'>
-                {order.deliveryMethod === 'delivery' ? 'Доставка' : 'Самовывоз'}
-                :
-                {order.deliveryMethod === 'delivery' &&
-                  ` ${order.deliveryAddress} ·`}{' '}
-                {order.recipientName}, {order.recipientPhone}
-              </div>
-              <div
-                className='text-lg font-bold text-gray-900'
-                data-testid={TEST_IDS.order.total}
-              >
-                Итого: {formatPrice(total)}
-              </div>
-            </div>
           </div>
         )}
+
+        <div className='border-t border-gray-200 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
+          <div className='text-sm text-gray-500'>
+            {order.deliveryMethod === 'delivery' ? 'Доставка' : 'Самовывоз'}:
+            {order.deliveryMethod === 'delivery' &&
+              ` ${order.deliveryAddress} ·`}{' '}
+            {order.recipientName}, {order.recipientPhone}
+          </div>
+          <div
+            className='text-lg font-bold text-gray-900'
+            data-testid={TEST_IDS.order.total}
+          >
+            Итого: {formatPrice(total)}
+          </div>
+        </div>
       </div>
     </div>
   );

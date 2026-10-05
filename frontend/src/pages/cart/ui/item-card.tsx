@@ -80,11 +80,11 @@ export const ItemCard = ({
               value={quantity}
               min={1}
               onChange={handleQuantityChange}
-              className='w-20 h-10 border border-gray-300 rounded-lg px-3 text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent'
+              className='w-20 h-10 border border-gray-300 rounded-lg px-3 text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent shrink-0'
             />
           </div>
 
-          <div className='shrink-0 text-lg font-semibold text-gray-900 w-28 text-right'>
+          <div className='shrink-0 text-lg font-semibold text-gray-900 w-28 text-right min-w-0'>
             {formatPrice(totalPrice)}
           </div>
         </>
