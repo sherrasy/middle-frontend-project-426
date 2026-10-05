@@ -7,6 +7,7 @@ import { Loader } from '@/shared/ui/loader';
 import { useQuery } from '@tanstack/react-query';
 import { ordersApi } from '../api/ordersApi';
 import { EmptyState } from '@/shared/ui/empty-placeholder';
+import { useState } from 'react';
 
 export const CabinetPage = () => {
   const { user } = useAuth();
@@ -15,6 +16,10 @@ export const CabinetPage = () => {
   );
 
   const orders = data?.items || [];
+  const [expandeOrder, setExpandedOrder] = useState<number | null>(null);
+
+  const handleExpand = (id: number) =>
+    setExpandedOrder((prev) => (prev === id ? null : id));
 
   if (isLoading) {
     return (
@@ -50,7 +55,14 @@ export const CabinetPage = () => {
             testId={TEST_IDS.account.ordersEmpty}
           />
         ) : (
-          orders.map((order) => <OrderItem key={order.id} order={order} />)
+          orders.map((order) => (
+            <OrderItem
+              key={order.id}
+              order={order}
+              isExpanded={expandeOrder === order.id}
+              handleExpand={handleExpand}
+            />
+          ))
         )}
       </div>
 

@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { Order } from '@/entities/order';
+import { TEST_IDS } from '@/shared/constants/testids';
 import { formatDate, formatPrice } from '@/shared/lib/formatters';
 import { Badge } from '@/shared/ui/badge';
-import { TEST_IDS } from '@/shared/constants/testids';
 import { KeyboardArrowDown } from '@material-symbols-svg/react/rounded/keyboard-arrow-down';
 import { KeyboardArrowUp } from '@material-symbols-svg/react/rounded/keyboard-arrow-up';
-import { Order } from '@/entities/order';
 
-export const OrderItem = ({ order }: { order: Order }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+interface OrderItemProps {
+  order: Order;
+  isExpanded: boolean;
+  handleExpand: (id: number) => void;
+}
+export const OrderItem = ({
+  order,
+  isExpanded,
+  handleExpand,
+}: OrderItemProps) => {
   const total = order.items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
@@ -38,7 +45,7 @@ export const OrderItem = ({ order }: { order: Order }) => {
 
           <button
             type='button'
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => handleExpand(order.id)}
             data-testid={TEST_IDS.account.orderToggle}
             className='text-sm text-blue-600 hover:text-blue-800 font-medium'
           >

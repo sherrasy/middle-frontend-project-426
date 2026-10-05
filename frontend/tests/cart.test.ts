@@ -1,27 +1,15 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { ROUTES } from '@/shared/constants/routes';
 import { TEST_IDS } from '@/shared/constants/testids';
+import { formatPrice } from '@/shared/lib/formatters';
 import { PRODUCTS_FIXTURE } from './_fixtures/catalogData';
 import {
+  addProductToCartAndOpenCart,
   mockCategories,
-  mockProductById,
   mockProducts,
-} from './_fixtures/mocks';
-import { formatPrice } from '@/shared/lib/formatters';
-
-const getProductRoute = (id: number) => `${ROUTES.CATALOG}/${id}`;
-
-const navigateToProduct = async (page: Page, productId: number) => {
-  await mockProductById(page, productId);
-  await page.goto(getProductRoute(productId));
-};
-
-const addProductToCartAndOpenCart = async (page: Page, productId: number) => {
-  await navigateToProduct(page, productId);
-  await page.getByTestId(TEST_IDS.product.addToCart).click();
-  await page.getByTestId(TEST_IDS.nav.cart).click();
-};
+  navigateToProduct
+} from './_mocks/product';
 
 test.describe('Cart Flow', () => {
   const defaultProduct = PRODUCTS_FIXTURE[0];

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ROUTES } from '@/shared/constants/routes';
-import { mockCategories, mockProducts } from './_fixtures/mocks';
+import { mockCategories, mockProducts } from './_mocks/product';
 import { TEST_IDS } from '@/shared/constants/testids';
 
 test.describe('Catalog Flow', () => {

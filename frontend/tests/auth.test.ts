@@ -6,10 +6,7 @@ import {
   TEST_PASSWORD,
 } from './_fixtures/authFormData';
 import { ROUTES } from '@/shared/constants/routes';
-
-// Хелпер для генерации уникального email, чтобы тесты не падали из-за конфликта "email уже занят"
-const generateUniqueEmail = () =>
-  `test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}@example.com`;
+import { generateUniqueEmail } from './_mocks/auth';
 
 test.describe('Authentication Flow', () => {
   // 1. Новый пользователь регистрируется и оказывается авторизованным
