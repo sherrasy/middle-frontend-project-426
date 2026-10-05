@@ -7,7 +7,7 @@ export const AUTH_CONFIG = {
     submitButtonText: 'Войти',
     linkText: 'Нет аккаунта?',
     linkLabel: 'Зарегистрироваться',
-    linkTo: ROUTES.SIGNIN,
+    linkTo: ROUTES.SIGNUP,
   },
   registration: {
     title: 'Регистрация',
@@ -16,6 +16,6 @@ export const AUTH_CONFIG = {
     submitButtonText: 'Зарегистрироваться',
     linkText: 'Уже есть аккаунт?',
     linkLabel: 'Войти',
-    linkTo: ROUTES.SIGNUP,
+    linkTo: ROUTES.SIGNIN,
   },
 } as const;

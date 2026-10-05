@@ -7,11 +7,11 @@ import { sendApiError } from '../lib/helpers/send-api-error.js';
 import { API_MESSAGES } from '../lib/messages.js';
 import { components } from '../types/api-schema.js';
 import { ErrorData } from '../types/common.js';
-import { PromoBlockType } from '../types/index.js';
+import { PromoBlockT } from '../types/index.js';
 
 export const promoRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get<{
-    Reply: PromoBlockType[] | ErrorData;
+    Reply: PromoBlockT[] | ErrorData;
   }>('/promo', {
     schema: {
       response: {
@@ -41,7 +41,7 @@ export const promoRoutes: FastifyPluginAsync = async (fastify) => {
           .where(eq(products.isAccessible, true))
           .orderBy(promoBlocks.id);
 
-        return reply.code(200).send(result satisfies PromoBlockType[]);
+        return reply.code(200).send(result satisfies PromoBlockT[]);
       } catch (error) {
         return sendApiError(reply, 500, API_MESSAGES.common.internalError);
       }

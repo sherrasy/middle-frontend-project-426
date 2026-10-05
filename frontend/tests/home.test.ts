@@ -4,8 +4,8 @@ import {
   mockCategories,
   mockProductById,
   mockProducts,
-  mockPromoBlocks,
-} from './_fixtures/mocks';
+} from './_mocks/product';
+import { mockPromoBlocks } from './_mocks/promo.ts';
 import { TEST_IDS } from '@/shared/constants/testids';
 
 test.describe('Home promo Flow', () => {

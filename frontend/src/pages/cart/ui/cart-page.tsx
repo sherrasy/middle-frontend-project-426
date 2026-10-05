@@ -1,11 +1,13 @@
 import { EmptyState } from '@/shared/ui/empty-placeholder';
 import { Loader } from '@/shared/ui/loader';
-import { useCartProducts } from '../model/useCartProducts';
 import { ItemCard } from './item-card';
 import { CartTotal } from './total';
 import { TEST_IDS } from '@/shared/constants/testids';
+import { useCartProducts } from '@/feature/add-to-cart/model/useCartProducts';
+import { useCart } from '@/feature/add-to-cart';
 
 export const CartPage = () => {
+  const { clearCart } = useCart();
   const { cartItems, totalPrice, totalItems, isEmptyCart, isLoading } =
     useCartProducts();
 
@@ -14,9 +16,16 @@ export const CartPage = () => {
   }
 
   return (
-    <div className='px-4 py-8 mx-auto w-svw max-w-6xl'>
+    <div className='px-4 py-8 mx-auto w-svw max-w-6xl relative'>
       <h1 className='text-3xl font-bold text-gray-900 mb-6'>Корзина</h1>
-
+      {!isEmptyCart && (
+        <button
+          className='text-red-500 hover:text-red-600  p-2 rounded-lg cursor-pointer transition-colors absolute top-13 right-2'
+          onClick={() => clearCart()}
+        >
+          Очистить корзину
+        </button>
+      )}
       <div className='flex flex-col lg:flex-row gap-6'>
         {isEmptyCart ? (
           <EmptyState

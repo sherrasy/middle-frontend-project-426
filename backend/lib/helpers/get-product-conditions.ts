@@ -1,8 +1,8 @@
 import { and, eq, ilike, gte, lte } from 'drizzle-orm';
 import { products } from '../../db/schema/products.js';
-import type { CatalogQueryType } from '../../types/catalog.js';
+import type { CatalogQueryT } from '../../types/catalog.js';
 
-export function getProductConditions(query: CatalogQueryType) {
+export function getProductConditions(query: CatalogQueryT) {
   const conditions = [];
 
   if (query.categoryId !== undefined) {

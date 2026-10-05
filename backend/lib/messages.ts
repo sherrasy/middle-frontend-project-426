@@ -14,4 +14,10 @@ export const API_MESSAGES = {
     validationError: 'Ошибка валидации данных',
     notFound: 'Данные не найдены',
   },
+  order: {
+    creationFailed: 'Невозможно создать заказ из-за проблем с товарами',
+    productNotAccessible: 'Товар временно недоступен для покупки',
+    productNotFound: 'Товар не найден',
+    invalidAddress: 'Адрес доставки обязателен при выборе курьерской доставки',
+  },
 } as const;

@@ -1,11 +1,15 @@
+import { ROUTES } from '@/shared/constants/routes';
 import { TEST_IDS } from '@/shared/constants/testids';
 import { formatPrice } from '@/shared/lib/formatters';
+import { useNavigate } from 'react-router-dom';
 
 interface CartTotalProps {
   amount: number;
   price: number;
 }
 export const CartTotal = ({ amount, price }: CartTotalProps) => {
+  const navigate = useNavigate();
+  const handleCheckoutRedirect = () => navigate(ROUTES.CHECKOUT);
   return (
     <div className='w-full lg:w-80 shrink-0 '>
       <div className='bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-2'>
@@ -36,6 +40,7 @@ export const CartTotal = ({ amount, price }: CartTotalProps) => {
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
           data-testid={TEST_IDS.cart.checkout}
+          onClick={handleCheckoutRedirect}
         >
           Оформить заказ
         </button>

@@ -1,7 +1,7 @@
-import { useCart } from '@/feature/add-to-cart';
 import { useQueries } from '@tanstack/react-query';
 import { productApi } from '@/entities/product/api/productApi';
 import { components } from '@/shared/types/api-schema';
+import { useCart } from './useCart';
 
 export interface CartItem {
   productId: string;
@@ -20,9 +20,9 @@ interface UseCartPageResult {
 }
 
 export const useCartProducts = (): UseCartPageResult => {
-  const { cart, isEmpty } = useCart();
+  const { cart, getTotalItems, isEmpty } = useCart();
   const isEmptyCart = isEmpty();
-
+  const totalItems = getTotalItems();
   const productQueries = useQueries({
     queries: Object.keys(cart).map((productId) => ({
       ...productApi.getProductQueryOptions(productId),
@@ -48,13 +48,6 @@ export const useCartProducts = (): UseCartPageResult => {
   const totalPrice = cartItems.reduce((sum, item) => {
     if (item.product && item.product.isAccessible) {
       return sum + item.product.price * item.quantity;
-    }
-    return sum;
-  }, 0);
-
-  const totalItems = cartItems.reduce((sum, item) => {
-    if (item.product?.isAccessible) {
-      return sum + item.quantity;
     }
     return sum;
   }, 0);
