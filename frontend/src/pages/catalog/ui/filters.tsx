@@ -37,6 +37,11 @@ export const CatalogFilters = ({
     setSearchInput(e.currentTarget.value);
   };
 
+  const handleReset = () => {
+    resetFilters();
+    setSearchInput('');
+  };
+
   return (
     <div
       className='bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6'
@@ -122,7 +127,6 @@ export const CatalogFilters = ({
           type='checkbox'
           id='onlyAvailable'
           defaultChecked={filters.onlyAvailable}
-          key={`onlyAvailable-${filters.onlyAvailable}`}
           onChange={(e) => setFilter('onlyAvailable', e.target.checked)}
           className='w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer'
           data-testid={TEST_IDS.filter.available}
@@ -137,7 +141,7 @@ export const CatalogFilters = ({
 
       <button
         type='button'
-        onClick={resetFilters}
+        onClick={handleReset}
         data-testid={TEST_IDS.filter.reset}
         className='w-full py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer'
       >
