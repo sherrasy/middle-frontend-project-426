@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { DELIVERY_METHODS, UI_MESSAGES } from '../lib/consts';
+import { DELIVERY_METHODS } from '../lib/consts';
+import { UI_MESSAGES } from '@/shared/constants/form-field-data';
 
 const MESSAGE = UI_MESSAGES.validation;
 
@@ -9,7 +10,7 @@ export const checkoutSchema = Yup.object({
     .required(MESSAGE.required),
   recipientName: Yup.string()
     .trim()
-    .min(2, 'Минимум 2 символа')
+    .min(2, MESSAGE.recipientNameMin)
     .required(MESSAGE.required),
   phone: Yup.string()
     .matches(/^\+?\d{10,18}$/, MESSAGE.phoneInvalid)

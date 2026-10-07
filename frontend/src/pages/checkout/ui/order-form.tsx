@@ -1,13 +1,13 @@
 import { Formik, Form as FormikForm } from 'formik';
+import { DELIVERY_METHODS } from '../lib/consts';
+import { TEST_IDS } from '@/shared/constants/testids';
+import { FormField } from '@/shared/ui/form-field';
+import { CheckoutFormValues, checkoutSchema } from '../model/checkout.schema';
 import {
-  DELIVERY_METHODS,
   FIELD_LIMITS,
   PLACEHOLDERS,
   UI_MESSAGES,
-} from '../lib/consts';
-import { TEST_IDS } from '@/shared/constants/testids';
-import { FormField } from './form-field';
-import { CheckoutFormValues, checkoutSchema } from '../model/checkout.schema';
+} from '@/shared/constants/form-field-data';
 
 interface CheckoutFormProps {
   onSubmit: (values: CheckoutFormValues) => void;
